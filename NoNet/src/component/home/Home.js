@@ -31,9 +31,9 @@ class Home extends Component {
   nav() {
     return (
       <Navigation 
-        leftText={'设置'}
-        rightText={'asdasd'}
-        leftClick={this._set}
+        leftText={'asdasd'}
+        rightText={'设置'}
+        rightClick={this._set}
       />
     )
   }

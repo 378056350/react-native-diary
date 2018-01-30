@@ -1,6 +1,6 @@
 // Default
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React, { Component, PureComponent } from 'react';
+import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableOpacity } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,6 +9,9 @@ import { dataAction } from '../../redux/action/index';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
 // Utils
+import SectionHeader from './SectionHeader';
+import SectionFooter from './SectionFooter';
+import Cell from './Cell';
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class Set extends Component {
@@ -21,8 +24,38 @@ class Set extends Component {
     return (
       <Navigation 
         leftText={'返回'}
-        rightText={'asdasd'}
         leftClick={this._back}
+      />
+    )
+  }
+  _renderItem=(item)=>{
+    return (
+      <Cell/>
+    )
+  }
+  _renderSectionHeader=(section)=>{
+    return (
+      <SectionHeader/>
+    )
+  }
+  // _SectionSeparatorComponent=()=>{
+  //   return (
+  //     <Text>section</Text>
+  //   )
+  // }
+  list() {
+    return (
+      <SectionList
+        style={{flex: 1}}
+        renderItem={({item}) => this._renderItem(item)}
+        renderSectionHeader={({section}) => this._renderSectionHeader(section)}
+        renderSectionFooter={()=><SectionFooter/>}
+        sections={[ 
+          {data: [{key: 0},{key: 1},{key: 2}], title: '123'},
+          {data: [{key: 0}], title: '123'},
+          {data: [{key: 0}], title: '123'},
+          {data: [{key: 0}], title: '123'}
+        ]}
       />
     )
   }
@@ -30,6 +63,7 @@ class Set extends Component {
     return (
       <View style={styles.container}>
         {this.nav()}
+        {this.list()}
       </View>
     );
   }
