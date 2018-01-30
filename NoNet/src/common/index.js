@@ -7,6 +7,7 @@ import BackgroundView from './BackgroundView/BackgroundView';
 import Line from './Line/Line';
 import BottomButton from './BottomButton/BottomButton';
 import Toast from './Toast/Toast';
+import KKInputHUD from './KKInputHUD/KKInputHUD';
 
 export {
   Line,
@@ -17,4 +18,5 @@ export {
   BackgroundView,
   BottomButton,
   Toast,
+  KKInputHUD
 }

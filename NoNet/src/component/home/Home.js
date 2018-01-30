@@ -7,21 +7,27 @@ import { connect } from 'react-redux';
 // action
 import { dataAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
+import { Navigation, ThirdPicker, DateManager, Toast, KKInputHUD } from '../../common/index';
 // 控件
-import Top from './Top';
-import Table from './Table';
-import Bottom from './Bottom';
+import Top from './top/Top';
+import Table from './table/Table';
+import Bottom from './bottom/Bottom';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class Home extends Component {
 
-
   _set=()=>{
     const { navigate } = this.props.navigation;
     navigate("Set");
   }
+  _onTopClick=()=>{
+    this.refs.hud.show();
+  }
+  _onBottomClick=(isDetail)=>{
+    this.refs.table.show(isDetail);
+  }
+
   nav() {
     return (
       <Navigation 
@@ -33,17 +39,22 @@ class Home extends Component {
   }
   top() {
     return (
-      <Top/>
+      <Top onPress={this._onTopClick}/>
     )
   }
   table() {
     return (
-      <Table/>
+      <Table ref={"table"}/>
     )
   }
   bottom() {
     return (
-      <Bottom/>
+      <Bottom onPress={this._onBottomClick}/>
+    )
+  }
+  hud() {
+    return (
+      <KKInputHUD ref={"hud"} text={"选择年份"}/>
     )
   }
   render() {
@@ -53,6 +64,7 @@ class Home extends Component {
         {this.top()}
         {this.table()}
         {this.bottom()}
+        {this.hud()}
       </View>
     );
   }
@@ -62,6 +74,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgba(244,244,244,1)',
+    justifyContent: 'space-between',
+    paddingBottom: 30,
   },
 });
 

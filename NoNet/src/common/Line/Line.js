@@ -12,7 +12,7 @@ import {
   Image,
 } from 'react-native';
 
-import { ScreenWidth, BackDefaultColor } from '../../utils/index';
+import { ScreenWidth, BackDefaultColor, LineColor } from '../../utils/index';
 
 class Line extends Component {
 
@@ -34,14 +34,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(233,233,233,1)',
-    height: 0.5,
+    height: 1,
   }
 });
 
 Line.defaultProps = {
   left: 0,
   right: 0,
-  color: BackDefaultColor
+  color: LineColor
 }
 
 Line.propTypes = {
