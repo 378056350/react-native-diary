@@ -1,13 +1,13 @@
 // Default
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, InteractionManager } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action
 import { dataAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, DateManager, Toast, KKInputHUD } from '../../common/index';
+import { Navigation, ThirdPicker, DateManager, Toast, KKInputHUD, HUD } from '../../common/index';
 // 控件
 import Top from './top/Top';
 import Table from './table/Table';
@@ -17,9 +17,12 @@ import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class Home extends Component {
 
+  //==================== 点击 ====================//
   _set=()=>{
-    const { navigate } = this.props.navigation;
-    navigate("Set");
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      navigate("Set");
+    })
   }
   _onTopClick=()=>{
     this.refs.hud.show();
@@ -27,11 +30,25 @@ class Home extends Component {
   _onBottomClick=(isDetail)=>{
     this.refs.table.show(isDetail);
   }
+  _onPositive=(i)=>{
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      navigate("List");
+    })
+  }
+  _onOpposite=(i)=>{
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      navigate("Set");
+    })
+  }
 
+
+  //==================== 控件 ====================//
   nav() {
     return (
       <Navigation 
-        leftText={'asdasd'}
+        leftText={'搜索'}
         rightText={'设置'}
         rightClick={this._set}
       />
@@ -44,7 +61,11 @@ class Home extends Component {
   }
   table() {
     return (
-      <Table ref={"table"}/>
+      <Table 
+        ref={"table"}
+        onPositive={this._onPositive}
+        onOpposite={this._onOpposite}
+      />
     )
   }
   bottom() {
@@ -54,7 +75,7 @@ class Home extends Component {
   }
   hud() {
     return (
-      <KKInputHUD ref={"hud"} text={"选择年份"}/>
+      <KKInputHUD ref={"hud"} type={HUD.WEATHER}/>
     )
   }
   render() {

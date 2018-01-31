@@ -9,18 +9,32 @@ import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
 class Table extends Component {
 
-
+  //==================== 动画 ====================//
   show(isDetail) {
     for (var i=0; i<12; i++) {
       this.refs["card"+i].show(isDetail)
     }
   }
 
+  //==================== 点击 ====================//
+  _onPositive=(i)=>{
+    this.props.onPositive(i);
+  }
+  _onOpposite=(i)=>{
+    this.props.onOpposite(i);
+  }
+
+  //==================== 控件 ====================//
   card=()=>{
     let arr = [];
-    for (var i=0; i<12; i++) {
+    for (let i=0; i<12; i++) {
       arr.push (
-        <Card ref={"card"+i} key={i}/>
+        <Card 
+          ref={"card"+i} 
+          key={i} 
+          onPositive={()=>this._onPositive(i)} 
+          onOpposite={()=>this._onOpposite(i)}
+        />
       )
     }
     return arr;

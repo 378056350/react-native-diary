@@ -9,7 +9,8 @@ import {
   Image, 
   StyleSheet, 
   TouchableHighlight, 
-  TouchableOpacity 
+  TouchableOpacity,
+  Switch
 } from 'react-native';
 // Setting
 import {
@@ -44,7 +45,8 @@ import { Button, BackLeft, BackRight } from '../../common/index';
 import TabbarIcon from './TabbarIcon';
 import { 
   Home,
-  Set
+  Set,
+  List
 } from '../index';
 
 getController = (data) => {
@@ -56,7 +58,7 @@ getController = (data) => {
       // headerLeft: (()=>{
       //   if (data.isLeft == true) {
       //     if (data.leftView != undefined) {
-      //       return data.rightView
+      //       return data.leftView
       //     } else {
       //       return <BackLeft navigation={navigation}/>
       //     }
@@ -106,6 +108,7 @@ const MyTab = TabNavigator({
     'screenName': Home, 
     'navTitle': '首页', 
     'isLeft': true, 
+    'leftView': <Switch/>,
     'isRight': false,
     'isBig': false,
     'navFontSize': NAVIGATION_FONT_SIZE,
@@ -160,12 +163,24 @@ export default MyApp = StackNavigator({
   Set: getController({
     'screenName': Set, 
     'navTitle': '设置', 
-    'isLeft': false, 
+    'isLeft': true, 
     'isRight': false,
     'isBig': false,
     'navFontSize': NAVIGATION_FONT_SIZE,
     'isGestures': false,
     'tabTitle': '设置',
+    'icon_normal': tabBar_detail_n,
+    'icon_select': tabBar_detail_s,
+  }),
+  List: getController({
+    'screenName': List, 
+    'navTitle': '日记列表', 
+    'isLeft': true, 
+    'isRight': false,
+    'isBig': false,
+    'navFontSize': NAVIGATION_FONT_SIZE,
+    'isGestures': false,
+    'tabTitle': '日记列表',
     'icon_normal': tabBar_detail_n,
     'icon_select': tabBar_detail_s,
   }),

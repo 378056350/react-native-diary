@@ -11,11 +11,20 @@ import {
   Easing
 } from 'react-native';
 import YearCell from './YearCell';
+import WeatherCell from './WeatherCell';
 import Line from '../Line/Line';
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor } from '../../utils/UIUtils';
 
+export const HUD = {
+  DATE: 2000,
+  WEATHER: 500,
+  COLOR: 0,
+};
+
+
 class KKInputHUD extends PureComponent {
 
+  //==================== 系统 ====================//
   constructor(props) {
     super(props);
     this.state = {
@@ -23,6 +32,8 @@ class KKInputHUD extends PureComponent {
       opacity: new Animated.Value(0),
     }
   }
+
+  //==================== 动画 ====================//
   show() {
     this.setState({
       modalVisible: true
@@ -47,7 +58,16 @@ class KKInputHUD extends PureComponent {
     });
   }
 
-
+  //==================== 控件 ====================//
+  text() {
+    if (this.props.type == HUD.DATE) {
+      return "选择年份"
+    } else if (this.props.type == HUD.WEATHER) {
+      return "选择天气"
+    } else if (this.props.type == HUD.COLOR) {
+      return "选择颜色"
+    }
+  }
   bj() {
     return (
       <TouchableOpacity onPress={()=>this.hide()} activeOpacity={1} style={{flex: 1}}>
@@ -79,7 +99,7 @@ class KKInputHUD extends PureComponent {
   top() {
     return (
       <View style={styles.top}>
-        <Text style={styles.topLeft}>{this.props.text}</Text>
+        <Text style={styles.topLeft}>{this.text()}</Text>
         <TouchableOpacity activeOpacity={0.8} onPress={()=>this.hide()}>
           <Text style={styles.topRight}>取消</Text>
         </TouchableOpacity>
@@ -87,9 +107,19 @@ class KKInputHUD extends PureComponent {
     )
   }
   _renderItem=(item)=>{
-    return (
-      <YearCell style={{height: ScreenHeight / 5 * 2 / 5}}/>
-    )
+    if (this.props.type == HUD.DATE) {
+      return (
+        <YearCell style={{height: ScreenHeight / 5 * 2 / 5}}/>
+      )
+    } else if (this.props.type == HUD.WEATHER) {
+      return (
+        <WeatherCell/>
+      )
+    } else if (this.props.type == HUD.COLOR) {
+      return (
+        <Text>COLOR</Text>
+      )
+    }
   }
   _ItemSeparatorComponent=()=>{
     return (
@@ -156,9 +186,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: 'rgba(50,50,50,1)'
   },
-  table: {
-
-  }
 });
 
 

@@ -7,11 +7,26 @@ import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index'
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class SectionHeader extends PureComponent {
+
+  name() {
+    if (this.props.name) {
+      return (
+        <Text style={styles.name}>{this.props.name}</Text>
+      )
+    }
+  }
+  detail() {
+    if (this.props.detail && this.props.detail.length != 0) {
+      return (
+        <Text style={styles.detail}>{this.props.detail}</Text>
+      )
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.name}>SectionHeader</Text>
-        <Text style={styles.detail}>SectionHeaderSectionHeaderSectionHeaderSectionHeaderSectionHeaderSectionHeaderSectionHeader</Text>
+        {this.name()}
+        {this.detail()}
       </View>
     );
   }
@@ -22,6 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(244,244,244,1)',
     paddingLeft: 15,
     paddingTop: 15,
+    marginBottom: 10,
   },
   name: {
     fontSize: 12,

@@ -1,21 +1,28 @@
 // Default
 import React, { Component, PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableHighlight } from 'react-native';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class Cell extends PureComponent {
+
+  _onPress(item) {
+    // this.props.onPress(item)
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.name}>SectionHeader</Text>
-        <View style={styles.subview}>
-          <Text style={styles.detail}>SectionHeader</Text>
-          <Image style={styles.icon}/>
+      <TouchableHighlight underlayColor={'#666'} onPress={()=>this._onPress(this.props.item)}>
+        <View style={styles.container}>
+          <Text style={styles.name}>{this.props.item.name}</Text>
+          <View style={styles.subview}>
+            <Text style={styles.detail}>SectionHeader</Text>
+            <Image style={styles.icon} source={require('../../assets/images/arrow_next.png')}/>
+          </View>
         </View>
-      </View>
+      </TouchableHighlight>
     );
   }
 }
@@ -35,18 +42,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   name: {
-    fontSize: 16,
+    fontSize: 15,
     color: 'rgba(50,50,50,1)',
   },
   detail: {
-    fontSize: 16,
-    color: 'rgba(50,50,50,1)',
-    marginRight: 5,
+    fontSize: 12,
+    color: 'rgba(150,150,150,1)',
+    fontWeight: '300'
   },
   icon: {
     width: 15,
     height: 15,
-    backgroundColor: 'red',
   }
 });
 

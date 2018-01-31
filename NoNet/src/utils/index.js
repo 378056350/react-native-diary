@@ -5,7 +5,8 @@ import {
     StreamColor, 
     ScreenPadding,
     TitleColor,
-    BackDefaultColor
+    BackDefaultColor,
+    LineColor
 } from './UIUtils';
 
 export {
@@ -14,5 +15,6 @@ export {
     StreamColor,
     ScreenPadding,
     TitleColor,
-    BackDefaultColor
+    BackDefaultColor,
+    LineColor
 }

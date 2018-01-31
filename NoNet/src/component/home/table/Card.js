@@ -12,28 +12,38 @@ import {
   TouchableOpacity,
   InteractionManager 
 } from 'react-native';
+// Utils
+import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
 const DURATION = 250;
 const CARD_WIDTH = ScreenWidth - 90;
 const CARD_HEIGHT = CARD_WIDTH / 5 * 8;
 
-// Utils
-import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
-
 class Card extends PureComponent {
 
+  //=================== 初始化 ===================//
   constructor(props) {
     super(props);
     this.state = {
       rotateValue: new Animated.Value(0),
-      isAnimated: false
+      isAnimated: false,
+      isPositive: true,
     }
   }
-
   componentDidMount() {
     this.refs.subview.shadowOpacity = 5;
   }
 
+  //==================== 点击 ====================//
+  _onPress=()=>{
+    if (this.state.isPositive == true) {
+      this.props.onPositive();
+    } else {
+      this.props.onOpposite();
+    }
+  } 
+
+  //==================== 动画 ====================//
   show(SHOW) {
     if (this.state.isAnimated == false) {
       if (SHOW == true) {
@@ -43,7 +53,6 @@ class Card extends PureComponent {
       }
     }
   }
-  
   hidePositive() {
     InteractionManager.runAfterInteractions(() => {
       this.state.rotateValue.setValue(0);
@@ -61,7 +70,8 @@ class Card extends PureComponent {
         this.refs.positive.setNativeProps({
           style: {
             opacity: 0,
-          }
+          },
+          onPress: undefined
         });
         this.showOpposite();
       });
@@ -75,10 +85,11 @@ class Card extends PureComponent {
       easing: Easing.linear
     }).start((result)=>{
       this.state.isAnimated = false;
+      this.state.isPositive = false;
       this.refs.subview.setNativeProps({
         style: {
           shadowRadius: 5
-        }
+        },
       });
     });
   }
@@ -99,7 +110,8 @@ class Card extends PureComponent {
         this.refs.positive.setNativeProps({
           style: {
             opacity: 1
-          }
+          },
+          onPress: this.props.onPositive
         });
         this.showPositive();
       });
@@ -113,6 +125,7 @@ class Card extends PureComponent {
       easing: Easing.linear
     }).start((result)=>{
       this.state.isAnimated = false;
+      this.state.isPositive = true;
       this.refs.subview.setNativeProps({
         style: {
           shadowRadius: 5
@@ -121,6 +134,7 @@ class Card extends PureComponent {
     });
   }
 
+  //==================== 控件 ====================//
   positive() {
     return (
       <View ref={"positive"} style={styles.positive}></View>
@@ -133,7 +147,7 @@ class Card extends PureComponent {
   }
   shadow() {
     return (
-      <Animated.View ref={"shadow"} style={[styles.shadow, {
+      <Animated.View pointerEvents={"none"} ref={"shadow"} style={[styles.shadow, {
         opacity: this.state.rotateValue.interpolate({
             inputRange: [0, 90, 180, 270, 360],
             outputRange: [0, 0.3, 0, 0.3, 0],
@@ -144,34 +158,36 @@ class Card extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-          <Animated.View ref={"subview"} style={[styles.subview,{
-            transform: [
-                //透视
-                {perspective: 1500},
-                {scale: 0.9},
-                //3d 旋转
-                {
-                    rotateY: this.state.rotateValue.interpolate({
-                        inputRange: [0, 360],
-                        outputRange: ['0deg','360deg'],
-                    })
-                },
-                {
-                    scale: this.state.rotateValue.interpolate({
-                        inputRange: [0, 90, 180, 270, 360],
-                        outputRange: [1, 0.95, 1, 0.95, 1]})     
-                },
-                {
-                    translateY: this.state.rotateValue.interpolate({
-                        inputRange: [0, 90, 180, 270, 360],
-                        outputRange: [0, 5, 0, 5, 0]}) 
-                }
-            ]
-          }]}>
-            {this.opposite()}
-            {this.positive()}
-            {this.shadow()}
-        </Animated.View>
+          <TouchableOpacity activeOpacity={1} onPress={this._onPress}>
+            <Animated.View ref={"subview"} style={[styles.subview,{
+              transform: [
+                  //透视
+                  {perspective: 1500},
+                  {scale: 0.9},
+                  //3d 旋转
+                  {
+                      rotateY: this.state.rotateValue.interpolate({
+                          inputRange: [0, 360],
+                          outputRange: ['0deg','360deg'],
+                      })
+                  },
+                  {
+                      scale: this.state.rotateValue.interpolate({
+                          inputRange: [0, 90, 180, 270, 360],
+                          outputRange: [1, 0.95, 1, 0.95, 1]})     
+                  },
+                  {
+                      translateY: this.state.rotateValue.interpolate({
+                          inputRange: [0, 90, 180, 270, 360],
+                          outputRange: [0, 5, 0, 5, 0]}) 
+                  }
+              ]
+            }]}>
+              {this.opposite()}
+              {this.positive()}
+              {this.shadow()}
+            </Animated.View>
+          </TouchableOpacity>
       </View>
     );
   }
