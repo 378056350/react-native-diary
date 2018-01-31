@@ -1,6 +1,6 @@
 // Default
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,7 +9,8 @@ import { dataAction } from '../../redux/action/index';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast, KKInputHUD } from '../../common/index';
 // Utils
-import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
+import Cell from './Cell';
+import { ScreenWidth, ScreenHeight, StreamColor, LineColor } from '../../utils/index';
 
 class List extends Component {
 
@@ -25,10 +26,19 @@ class List extends Component {
       />
     )
   }
+  table() {
+    return (
+      <FlatList
+        data={[{key: '1'}, {key: '2'}, {key: '3'}, {key: '4'}, {key: '5'}]}
+        renderItem={({item}) => <Cell/>}
+      />
+    )
+  }
   render() {
     return (
       <View style={styles.container}>
         {this.nav()}
+        {this.table()}
       </View>
     );
   }
@@ -37,9 +47,9 @@ class List extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(244,244,244,1)',
+    backgroundColor: LineColor,
     justifyContent: 'space-between',
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
 });
 

@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
   },
   positive: {
-    backgroundColor: 'white',
+    backgroundColor: '#87CEFA',
     position: 'absolute',
     left: 0,
     top: 0,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   opposite: {
-    backgroundColor: '#87CEFA',
+    backgroundColor: 'white',
     position: 'absolute',
     left: 0,
     top: 0,
