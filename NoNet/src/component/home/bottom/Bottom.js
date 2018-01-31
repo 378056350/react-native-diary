@@ -15,16 +15,17 @@ class Bottom extends PureComponent {
     }
   }
 
-  _onPress=()=>{
-    this.props.onPress(!this.state.isDetail);
+  _onChange=()=>{
+    this.props.onChange(!this.state.isDetail);
     this.setState({
       isDetail: !this.state.isDetail
     });
   }
   _edit=()=>{
-    return (
-      <Image source={{uri: require('../../../assets/images/home_edit.png')}}/>
-    )
+    this.props.onEdit();
+    // return (
+    //   <Image source={{uri: require('../../../assets/images/home_edit.png')}}/>
+    // )
   }
 
   render() {
@@ -32,8 +33,8 @@ class Bottom extends PureComponent {
       <View style={styles.container}>
         <CurrentDay/>
         <View style={styles.subview}>
-          <Button customView={<Image style={{width: 40, height: 40}} source={require('../../../assets/images/home_edit.png')}/>}/>
-          <Button style={styles.turn} onPress={this._onPress} customView={<Image style={{width: 40, height: 40}} source={require('../../../assets/images/home_edit.png')}/>}/>
+          <Button onPress={this._edit} customView={<Image style={{width: 40, height: 40}} source={require('../../../assets/images/home_edit.png')}/>}/>
+          <Button style={styles.turn} onPress={this._onChange} customView={<Image style={{width: 40, height: 40}} source={require('../../../assets/images/home_edit.png')}/>}/>
         </View>
       </View>
     );

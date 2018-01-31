@@ -27,8 +27,14 @@ class Home extends Component {
   _onTopClick=()=>{
     this.refs.hud.show();
   }
-  _onBottomClick=(isDetail)=>{
+  _onBottomChangClick=(isDetail)=>{
     this.refs.table.show(isDetail);
+  }
+  _onBottomEditClick=()=>{
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      navigate("Edit");
+    })
   }
   _onPositive=(i)=>{
     InteractionManager.runAfterInteractions(() => {
@@ -39,7 +45,7 @@ class Home extends Component {
   _onOpposite=(i)=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
-      navigate("Set");
+      navigate("Diary");
     })
   }
 
@@ -70,7 +76,10 @@ class Home extends Component {
   }
   bottom() {
     return (
-      <Bottom onPress={this._onBottomClick}/>
+      <Bottom 
+        onChange={this._onBottomChangClick}
+        onEdit={this._onBottomEditClick}
+      />
     )
   }
   hud() {

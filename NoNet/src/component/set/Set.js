@@ -1,6 +1,6 @@
 // Default
 import React, { Component, PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -40,33 +40,6 @@ class Set extends Component {
       />
     )
   }
-  _renderItem=(item)=>{
-    return (
-      <Cell item={item}/>
-    )
-  }
-  _renderSectionHeader=(section)=>{
-    return (
-      <SectionHeader name={section.title} detail={section.detail}/>
-    )
-  }
-  _ListFooterComponent=()=>{
-    return (
-      <ListFooter/>
-    )
-  }
-  _ListHeaderComponent=()=>{
-    return (
-      <View style={{height: 1}}>
-        <Line color={LineColor}/>
-      </View>
-    )
-  }
-  // _SectionSeparatorComponent=()=>{
-  //   return (
-  //     <Text>section</Text>
-  //   )
-  // }
   data=()=>{
     let arr = [];
     for (var i=0; i<this.state.name.length; i++) {
@@ -88,17 +61,20 @@ class Set extends Component {
     return arr;
   }
   list() {
+    let arr = [];
+    arr.push(<View style={{height: 1}}><Line color={LineColor}/></View>)
+    for (let i=0; i<this.state.cell.length; i++) {
+      arr.push(<SectionHeader name={this.state.name[i]} detail={this.state.detail[i]}/>)
+      for (let j=0; j<this.state.cell[i].length; j++) {
+        arr.push(<Cell item={{section: i, row: j, name: this.state.cell[i][j]}}/>)
+      } 
+      arr.push(<View style={{height: 20}}><Line color={LineColor}/></View>)
+    }
+    arr.push(<ListFooter/>)
     return (
-      <SectionList
-        style={{flex: 1}}
-        renderItem={({item}) => this._renderItem(item)}
-        renderSectionHeader={({section}) => this._renderSectionHeader(section)}
-        renderSectionFooter={({section})=><SectionFooter/>}
-        sections={this.data()}
-        ListFooterComponent={this._ListFooterComponent}
-        ListHeaderComponent={this._ListHeaderComponent}
-        stickySectionHeadersEnabled={false}
-      />
+      <ScrollView>
+        {arr}
+      </ScrollView>
     )
   }
   render() {

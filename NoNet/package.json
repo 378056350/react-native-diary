@@ -11,6 +11,7 @@
     "react": "16.0.0",
     "react-native": "0.51.0",
     "react-native-picker": "^4.3.2",
+    "react-native-swipe-list-view": "^1.0.5",
     "react-navigation": "^1.0.0-beta.22",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",

@@ -18,7 +18,7 @@ class Cell extends Component {
         <View style={styles.content}>
           <Image style={styles.contentT}/>
           <View style={styles.contentC}>
-            <Text style={styles.contentText}>123231</Text>
+            <Text style={styles.contentText}>{this.props.item.key}</Text>
           </View>
           <Image style={styles.contentB}/>
         </View>
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 10,
     paddingBottom: 10,
+    backgroundColor: StreamColor,
   },
   subview: {
     flex: 1,

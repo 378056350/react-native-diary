@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Easing, Animated } from 'react-native';
 import { StackNavigator, TabNavigator, addNAVIGATION_HEIGHTelpers } from 'shimo-navigation';
+// import { StackNavigator, TabNavigator, addNAVIGATION_HEIGHTelpers } from 'react-navigation';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import { 
   View, 
@@ -46,7 +47,9 @@ import TabbarIcon from './TabbarIcon';
 import { 
   Home,
   Set,
-  List
+  List,
+  Diary,
+  Edit
 } from '../index';
 
 getController = (data) => {
@@ -147,6 +150,7 @@ const MyTab = TabNavigator({
   },
 });
 
+
 export default MyApp = StackNavigator({
   Home: getController({
     'screenName': Home, 
@@ -155,7 +159,7 @@ export default MyApp = StackNavigator({
     'isRight': false,
     'isBig': false,
     'navFontSize': NAVIGATION_FONT_SIZE,
-    'isGestures': false,
+    'isGestures': true,
     'tabTitle': '首页',
     'icon_normal': tabBar_detail_n,
     'icon_select': tabBar_detail_s,
@@ -163,11 +167,11 @@ export default MyApp = StackNavigator({
   Set: getController({
     'screenName': Set, 
     'navTitle': '设置', 
-    'isLeft': true, 
+    'isLeft': false, 
     'isRight': false,
     'isBig': false,
     'navFontSize': NAVIGATION_FONT_SIZE,
-    'isGestures': false,
+    'isGestures': true,
     'tabTitle': '设置',
     'icon_normal': tabBar_detail_n,
     'icon_select': tabBar_detail_s,
@@ -175,32 +179,40 @@ export default MyApp = StackNavigator({
   List: getController({
     'screenName': List, 
     'navTitle': '日记列表', 
-    'isLeft': true, 
+    'isLeft': false, 
     'isRight': false,
     'isBig': false,
     'navFontSize': NAVIGATION_FONT_SIZE,
-    'isGestures': false,
+    'isGestures': true,
     'tabTitle': '日记列表',
     'icon_normal': tabBar_detail_n,
     'icon_select': tabBar_detail_s,
   }),
-  // MyTab: {
-  //   screen: MyTab,
-  // },
-  // Category: getController({
-  //   'screenName': Category, 
-  //   'navTitle': '分类', 
-  //   'isLeft': false, 
-  //   'isRight': false,
-  //   'isBig': true,
-  //   'navFontSize': NAVIGATION_FONT_SIZE,
-  //   'isGestures': true,
-  //   'tabTitle': '分类',
-  //   'icon_normal': tabBar_add_n,
-  //   'icon_select': tabBar_add_h,
-  // }),
+  Diary: getController({
+    'screenName': Diary, 
+    'navTitle': '日记', 
+    'isLeft': false, 
+    'isRight': false,
+    'isBig': false,
+    'navFontSize': NAVIGATION_FONT_SIZE,
+    'isGestures': false,
+    'tabTitle': '日记',
+    'icon_normal': tabBar_detail_n,
+    'icon_select': tabBar_detail_s,
+  }),
+  Edit: getController({
+    'screenName': Edit, 
+    'navTitle': '编辑日记', 
+    'isLeft': false, 
+    'isRight': false,
+    'isBig': false,
+    'navFontSize': NAVIGATION_FONT_SIZE,
+    'isGestures': false,
+    'tabTitle': '编辑日记',
+    'icon_normal': tabBar_detail_n,
+    'icon_select': tabBar_detail_s,
+  }),
 }, {
-  
 });
 
 
