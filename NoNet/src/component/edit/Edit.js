@@ -27,6 +27,14 @@ class Edit extends PureComponent {
       height: 0,
       keyboardY: new Animated.Value(0),
       titleTop: 0,
+      icon: [
+        require('../../assets/images/weather_sunny_small.png'),
+        require('../../assets/images/weather_cloud_small.png'),
+        require('../../assets/images/weather_rain_small.png'),
+        require('../../assets/images/weather_snow_small.png'),
+        require('../../assets/images/weather_light_small.png')
+      ],
+      currentWeatherIndex: 0,
     };  
   }  
   componentWillMount () {
@@ -97,6 +105,12 @@ class Edit extends PureComponent {
   _onWeather=()=>{
     this.refs.hud.show();
   }
+  // hud选择
+  _onHudClick=(item)=>{
+    this.setState({
+      currentWeatherIndex: item.key,
+    })
+  }
 
   //==================== 控件 ====================//
   nav() {
@@ -123,7 +137,7 @@ class Edit extends PureComponent {
           <Text style={styles.date}>asdasdas</Text>
           <TextInput style={styles.name} ref={"title"} autoCorrect={false} placeholder={"标题"} onLayout={this._onTitleLayout}/>
           <TouchableOpacity activeOpacity={1} style={styles.weather} onPress={this._onWeather}>
-            <Image style={{flex: 1}}/>
+            <Image style={{flex: 1, width: 25}} resizeMode={"contain"} source={this.state.icon[this.state.currentWeatherIndex]}/>
           </TouchableOpacity>
           <AutoExpandingTextInput  
             ref={"content"}
@@ -138,7 +152,11 @@ class Edit extends PureComponent {
   }
   hud() {
     return (
-      <KKInputHUD ref={"hud"} type={HUD.WEATHER}/>
+      <KKInputHUD 
+        ref={"hud"} 
+        type={HUD.WEATHER} 
+        onPress={this._onHudClick}
+      />
     )
   }
   ketaccess() {
@@ -222,7 +240,6 @@ const styles = StyleSheet.create({
   weather: {
     width: 25,
     height: 25,
-    backgroundColor: 'red',
     marginTop: 10,
   },
   detail: {

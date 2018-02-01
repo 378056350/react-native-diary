@@ -7,21 +7,34 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  TouchableHighlight,
 } from 'react-native';
 import { ScreenWidth, ScreenHeight } from '../../utils/index';
 import { StreamColor } from '../../utils/UIUtils';
 
 class WeatherCell extends PureComponent {
 
+  next() {
+    if (this.props.item.isSelect == true) {
+      return (
+        <Image style={styles.next} source={require('../../assets/images/weather_check.png')}/>
+      )
+    }
+  }
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.subview}>
-          <Image style={styles.icon}/>
-          <Text style={styles.text}>2018</Text>
+      <TouchableHighlight
+        underlayColor={'rgba(200,200,200,1)'} 
+        onPress={()=>this.props.onPress(this.props.item)}
+      >
+        <View style={styles.container}>
+          <View style={styles.subview}>
+            <Image style={styles.icon} source={this.props.icon}/>
+            <Text style={styles.text}>{this.props.item.weather}</Text>
+          </View>
+          {this.next()}
         </View>
-        <Image style={styles.next}/>
-      </View>
+      </TouchableHighlight>
     );
   }
 }
@@ -42,16 +55,14 @@ const styles = StyleSheet.create({
   icon: {
     width: 20,
     height: 20,
-    backgroundColor: 'red',
   },  
   text: {
-    color: 'gray',
+    color: 'rgba(50,50,50,1)',
     marginLeft: 10,
   },
   next: {
     width: 20,
     height: 20,
-    backgroundColor: 'red',
   },
 });
 

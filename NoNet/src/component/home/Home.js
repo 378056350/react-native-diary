@@ -104,9 +104,9 @@ class Home extends Component {
   hud() {
     return (
       <KKInputHUD 
-      ref={"hud"} 
-      type={HUD.DATE}
-      onPress={this._onHudClick}
+        ref={"hud"} 
+        type={HUD.DATE}
+        onPress={this._onHudClick}
       />
     )
   }

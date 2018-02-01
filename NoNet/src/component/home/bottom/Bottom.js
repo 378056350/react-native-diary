@@ -8,6 +8,7 @@ import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
 class Bottom extends PureComponent {
 
+  //==================== 系统 ====================//
   constructor(props) {
     super(props);
     this.state = {
@@ -15,19 +16,14 @@ class Bottom extends PureComponent {
     }
   }
 
+  //==================== 控件 ====================//
   _onChange=()=>{
     this.props.onChange(!this.state.isDetail);
-    this.setState({
-      isDetail: !this.state.isDetail
-    });
+    this.state.isDetail = !this.state.isDetail;
   }
   _edit=()=>{
     this.props.onEdit();
-    // return (
-    //   <Image source={{uri: require('../../../assets/images/home_edit.png')}}/>
-    // )
   }
-
   render() {
     return (
       <View style={styles.container}>

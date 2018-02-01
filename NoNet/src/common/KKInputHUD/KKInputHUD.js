@@ -30,7 +30,14 @@ class KKInputHUD extends PureComponent {
     this.state = {
       modalVisible: false,
       opacity: new Animated.Value(0),
-      currentIndex: -1
+      currentIndex: -1,
+      icon: [
+        require('../../assets/images/weather_sunny_big.png'),
+        require('../../assets/images/weather_cloud_big.png'),
+        require('../../assets/images/weather_rain_big.png'),
+        require('../../assets/images/weather_snow_big.png'),
+        require('../../assets/images/weather_light_big.png')
+      ]
     }
   }
 
@@ -62,26 +69,49 @@ class KKInputHUD extends PureComponent {
   //==================== 数据 ====================//
   data() {
     let arr = [];
-    let year = DateManager.getYearList();
-    for (let i=0; i<year.length; i++) {
-      let isSelect = false;
-      if (this.state.currentIndex != -1) {
-        isSelect = i == this.state.currentIndex;
-      } else {
-        isSelect = DateManager.getYear() == year[i]
+    if (this.props.type == HUD.DATE) {
+      let year = DateManager.getYearList();
+      for (let i=0; i<year.length; i++) {
+        let isSelect = false;
+        if (this.state.currentIndex != -1) {
+          isSelect = i == this.state.currentIndex;
+        } else {
+          isSelect = DateManager.getYear() == year[i]
+        }
+        arr.push({key: i, year: year[i], isSelect: isSelect})
       }
-      arr.push({key: i, year: year[i], isSelect: isSelect})
+    } 
+    else if (this.props.type == HUD.WEATHER) {
+      let weather = ["Sunny","Cloud","Rain","Snow","Lighting"];
+      for (let i=0; i<weather.length; i++) {
+        let isSelect = false;
+        if (this.state.currentIndex != -1) {
+          isSelect = i == this.state.currentIndex;
+        } else {
+          isSelect = i == 0
+        }
+        arr.push({key: i, weather: weather[i], isSelect: isSelect})
+      }
     }
     return arr;
   }
 
   //==================== 点击 ====================//
   _onCellClick=(item)=>{
-    this.setState({
-      currentIndex: item.key
-    });
-    this.hide();
-    this.props.onPress(item);
+    if (this.props.type == HUD.DATE) {
+      this.setState({
+        currentIndex: item.key
+      });
+      this.hide();
+      this.props.onPress(item);
+    } 
+    else if (this.props.type == HUD.WEATHER) {
+      this.setState({
+        currentIndex: item.key
+      });
+      this.hide();
+      this.props.onPress(item);
+    }
   }
 
   //==================== 控件 ====================//
@@ -138,14 +168,17 @@ class KKInputHUD extends PureComponent {
     if (this.props.type == HUD.DATE) {
       return (
         <YearCell 
-          style={{height: ScreenHeight / 5 * 2 / 5}} 
           item={item}
           onPress={this._onCellClick}
         />
       )
     } else if (this.props.type == HUD.WEATHER) {
       return (
-        <WeatherCell/>
+        <WeatherCell 
+          item={item}
+          icon={this.state.icon[item.key]}
+          onPress={this._onCellClick}
+        />
       )
     } else if (this.props.type == HUD.COLOR) {
       return (
