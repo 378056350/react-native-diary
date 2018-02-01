@@ -8,7 +8,9 @@ import Line from './Line/Line';
 import BottomButton from './BottomButton/BottomButton';
 import Toast from './Toast/Toast';
 import KKInputHUD, { HUD } from './KKInputHUD/KKInputHUD';
-
+import AutoExpandingTextInput from './AutoExpandingTextInput/AutoExpandingTextInput';
+import KeyboardAccess from './KeyboardAccess/KeyboardAccess';
+import DateManager from './DateManager/DateManager';
 
 export {
   Line,
@@ -20,5 +22,8 @@ export {
   BottomButton,
   Toast,
   KKInputHUD,
-  HUD
+  HUD,
+  AutoExpandingTextInput,
+  KeyboardAccess,
+  DateManager,
 }

@@ -13,6 +13,7 @@ import {
 import YearCell from './YearCell';
 import WeatherCell from './WeatherCell';
 import Line from '../Line/Line';
+import DateManager from '../DateManager/DateManager';
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor } from '../../utils/UIUtils';
 
 export const HUD = {
@@ -20,7 +21,6 @@ export const HUD = {
   WEATHER: 500,
   COLOR: 0,
 };
-
 
 class KKInputHUD extends PureComponent {
 
@@ -30,6 +30,7 @@ class KKInputHUD extends PureComponent {
     this.state = {
       modalVisible: false,
       opacity: new Animated.Value(0),
+      currentIndex: -1
     }
   }
 
@@ -58,6 +59,31 @@ class KKInputHUD extends PureComponent {
     });
   }
 
+  //==================== 数据 ====================//
+  data() {
+    let arr = [];
+    let year = DateManager.getYearList();
+    for (let i=0; i<year.length; i++) {
+      let isSelect = false;
+      if (this.state.currentIndex != -1) {
+        isSelect = i == this.state.currentIndex;
+      } else {
+        isSelect = DateManager.getYear() == year[i]
+      }
+      arr.push({key: i, year: year[i], isSelect: isSelect})
+    }
+    return arr;
+  }
+
+  //==================== 点击 ====================//
+  _onCellClick=(item)=>{
+    this.setState({
+      currentIndex: item.key
+    });
+    this.hide();
+    this.props.onPress(item);
+  }
+
   //==================== 控件 ====================//
   text() {
     if (this.props.type == HUD.DATE) {
@@ -77,6 +103,16 @@ class KKInputHUD extends PureComponent {
       </TouchableOpacity>
     )
   }
+  top() {
+    return (
+      <View style={styles.top}>
+        <Text style={styles.topLeft}>{this.text()}</Text>
+        <TouchableOpacity style={styles.topRight} activeOpacity={0.8} onPress={()=>this.hide()}>
+          <Text style={styles.topRightText}>取消</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   bottom() {
     return (
       <Animated.View style={[styles.bottom, {
@@ -89,27 +125,23 @@ class KKInputHUD extends PureComponent {
       }]}>
         {this.top()}
         <FlatList
-          data={[{key: 'a'}, {key: 'b'},{key: 'c'}, {key: 'd'},{key: 'e'}, {key: 'f'}]}
+          ref={"table"}
+          data={this.data()}
           renderItem={({item}) => this._renderItem(item)}
           ItemSeparatorComponent={this._ItemSeparatorComponent}
+          getItemLayout={(data, index) => ({length: ScreenHeight / 5 * 2 / 5, offset: ScreenHeight / 5 * 2 / 5 * index, index})}
         />
       </Animated.View>
-    )
-  }
-  top() {
-    return (
-      <View style={styles.top}>
-        <Text style={styles.topLeft}>{this.text()}</Text>
-        <TouchableOpacity activeOpacity={0.8} onPress={()=>this.hide()}>
-          <Text style={styles.topRight}>取消</Text>
-        </TouchableOpacity>
-      </View>
     )
   }
   _renderItem=(item)=>{
     if (this.props.type == HUD.DATE) {
       return (
-        <YearCell style={{height: ScreenHeight / 5 * 2 / 5}}/>
+        <YearCell 
+          style={{height: ScreenHeight / 5 * 2 / 5}} 
+          item={item}
+          onPress={this._onCellClick}
+        />
       )
     } else if (this.props.type == HUD.WEATHER) {
       return (
@@ -174,7 +206,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 15,
-    paddingRight: 15,
   },
   topLeft: {
     fontSize: 11,
@@ -182,12 +213,18 @@ const styles = StyleSheet.create({
     color: 'gray'
   },
   topRight: {
+    height: ScreenHeight / 5 * 2 / 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  topRightText: {
     fontSize: 13,
     fontWeight: '400',
-    color: 'rgba(50,50,50,1)'
+    color: 'rgba(50,50,50,1)',
   },
 });
-
 
 // 连接组件 
 export default KKInputHUD;

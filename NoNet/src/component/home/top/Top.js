@@ -10,7 +10,7 @@ class Top extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity activeOpacity={1} onPress={this.props.onPress}>
-          <Text style={styles.text}>Top</Text>
+          <Text style={styles.text}>{this.props.name}</Text>
         </TouchableOpacity>
       </View>
     );

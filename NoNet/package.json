@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "immutability": "^1.0.2",
+    "prop-types": "^15.6.0",
     "react": "16.0.0",
     "react-native": "0.51.0",
     "react-native-picker": "^4.3.2",

@@ -17,38 +17,57 @@ import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class Home extends Component {
 
+  //==================== 系统 ====================//
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentYear: DateManager.getYear(),
+    }
+  }
+
   //==================== 点击 ====================//
+  // 设置
   _set=()=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
       navigate("Set");
     })
   }
+  // 年份
   _onTopClick=()=>{
     this.refs.hud.show();
   }
+  // 切换卡片正反
   _onBottomChangClick=(isDetail)=>{
     this.refs.table.show(isDetail);
   }
+  // 编辑日记
   _onBottomEditClick=()=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
       navigate("Edit");
     })
   }
+  // 正面
   _onPositive=(i)=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
       navigate("List");
     })
   }
+  // 反面
   _onOpposite=(i)=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
       navigate("Diary");
     })
   }
-
+  // hud选择
+  _onHudClick=(item)=>{
+    this.setState({
+      currentYear: item.year
+    })
+  }
 
   //==================== 控件 ====================//
   nav() {
@@ -62,7 +81,7 @@ class Home extends Component {
   }
   top() {
     return (
-      <Top onPress={this._onTopClick}/>
+      <Top onPress={this._onTopClick} name={this.state.currentYear}/>
     )
   }
   table() {
@@ -84,7 +103,11 @@ class Home extends Component {
   }
   hud() {
     return (
-      <KKInputHUD ref={"hud"} type={HUD.WEATHER}/>
+      <KKInputHUD 
+      ref={"hud"} 
+      type={HUD.DATE}
+      onPress={this._onHudClick}
+      />
     )
   }
   render() {

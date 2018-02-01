@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 import { ScreenWidth, ScreenHeight } from '../../utils/index';
 import { StreamColor } from '../../utils/UIUtils';
@@ -14,9 +15,18 @@ class YearCell extends PureComponent {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>2018</Text>
-      </View>
+      <TouchableHighlight 
+        underlayColor={'rgba(200,200,200,1)'} 
+        onPress={()=>this.props.onPress(this.props.item)}
+      >
+        <View style={styles.container}>
+          <Text style={[styles.text, this.props.item.isSelect == true && {
+            color: 'black'
+          }]}>
+            {this.props.item.year}
+          </Text>
+        </View>
+      </TouchableHighlight>
     );
   }
 }
@@ -28,7 +38,8 @@ const styles = StyleSheet.create({
     height: ScreenHeight / 5 * 2 / 5
   },
   text: {
-    color: 'gray'
+    color: 'gray',
+    fontWeight: '400',
   }
 });
 
