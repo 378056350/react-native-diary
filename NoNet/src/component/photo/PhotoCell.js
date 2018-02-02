@@ -7,20 +7,30 @@ import {
   Image,
   TouchableOpacity,
   Animated,
-  Easing
+  Easing,
+  DeviceEventEmitter
 } from 'react-native';
 import { ScreenWidth } from '../../utils/index';
  
-class Cell extends Component {
+class PhotoCell extends Component {
 
   //==================== 系统 ====================//
   constructor(props) {
     super(props);
     this.state = {
       borderWidth: 0,
+      name: 0,
       scaleValue: new Animated.Value(0)
     };
   }
+  componentDidMount() {
+    this.subscription = DeviceEventEmitter.addListener('Cell'+this.props.item.item.row, (userName) =>{
+      this.text();
+    })
+  }
+  componentWillUnmount() {
+    this.subscription.remove();
+  };
   
   //==================== 点击 ====================//
   _onPress=()=>{
@@ -48,38 +58,45 @@ class Cell extends Component {
     if (this.props.item.item.isSelect != 0) {
       str = this.props.item.item.isSelect;
     }
-    // console.log(this.props.selectCount)
-    // for (let i=0; i<this.props.selectCount.length; i++) {
-    //   if (this.props.item.item.row == this.props.selectCount[i]) {
-    //     str = i + 1
-    //   }
-    // }
-    return str;
+    this.setState({
+      name: str
+    })
   }
 
   //==================== 控件 ====================//
+  _onLoad=()=>{
+    return (
+      <Text>123123</Text>
+    )
+  }
+  content() {
+    return (
+      <Animated.View 
+        style={[styles.container, {
+          borderWidth: this.state.borderWidth,
+          transform: [{
+            scale: this.state.scaleValue.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [1, 1.05, 1],
+            })
+          }] 
+        }]}
+      >
+        <Image 
+        style={[styles.icon, {borderRadius: this.state.borderWidth}]} 
+        source={{uri: this.props.item.item.node.image.uri}}
+        onLoad={this._onLoad}
+        />
+        <View style={[styles.number, {opacity: this.state.borderWidth == 5 ? 1 : 0}]}>
+          <Text style={styles.name}>{this.state.name}</Text>
+        </View>
+      </Animated.View>
+    )
+  }
   render() { 
     return (
-      <TouchableOpacity activeOpacity={0.8} onPress={this._onPress}>
-        <Animated.View 
-          style={[
-            styles.container, 
-            {
-              borderWidth: this.state.borderWidth,
-              transform: [{
-                scale: this.state.scaleValue.interpolate({
-                  inputRange: [0, 1, 2],
-                  outputRange: [1, 1.05, 1],
-                })
-              }] 
-            }
-          ]}
-        >
-          <Image style={[styles.icon, {borderRadius: this.state.borderWidth}]} source={{uri: this.props.item.item.node.image.uri}}/>
-          <View style={[styles.number, {opacity: this.state.borderWidth == 5 ? 1 : 0}]}>
-            <Text style={styles.name}>{this.text()}</Text>
-          </View>
-        </Animated.View>
+      <TouchableOpacity activeOpacity={1} onPress={this._onPress}>
+        {this.content()}
       </TouchableOpacity>
     )
   }
@@ -115,4 +132,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Cell;
+export default PhotoCell;

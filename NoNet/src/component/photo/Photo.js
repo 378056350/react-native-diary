@@ -8,13 +8,14 @@ import {
   CameraRoll,
   ListView,
   FlatList,
-  Switch,
+  DeviceEventEmitter
 } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // 控件
-import Cell from './Cell';
+import PhotoCell from './PhotoCell';
+import CameraCell from './CameraCell';
 import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast, AutoExpandingTextInput } from '../../common/index';
 // action
 import { dataAction } from '../../redux/action/index';
@@ -23,7 +24,7 @@ import { StreamColor } from '../../utils/index';
 //网络图片地址
 var imgURL = "http://www.hangge.com/blog/images/logo.png"
  
-class Photo extends Component{
+class Photo extends Component {
 
   //==================== 系统 ====================//
   // 构造函数
@@ -41,9 +42,10 @@ class Photo extends Component{
     this.fetchData();
   }
   fetchData() {
+    this.state.loaded = true;
     // 定义如何从cameraRoll中取数据
     var fetchParams = {
-      first: 12, // 每次取六张
+      first: 5, // 每次取六张
       groupTypes: 'All',
       assetType: 'Photos'
     }
@@ -52,9 +54,6 @@ class Photo extends Component{
       fetchParams.after = this.state.lastCursor;
     }
     CameraRoll.getPhotos(fetchParams).then((data) => {
-      this.setState({
-        loaded: true,
-      });
       this._appendAssets(data); // 取到图片数据后，交由appendAssets处理
     }).done();
   }
@@ -76,11 +75,16 @@ class Photo extends Component{
       this.setState({
         photos: [...this.state.photos, ...assetsArr],
         noMore: noMore,
-        lastCursor: data.page_info.end_cursor
+        lastCursor: data.page_info.end_cursor,
+        loaded: false
       })
     }
+    this.state.loaded = false;
   }
   _onLoadMore=()=>{
+    if (this.state.loaded == true) {
+      return;
+    }
     if(!this.state.noMore) {
       this.fetchData();
     }
@@ -98,17 +102,19 @@ class Photo extends Component{
     if (isSelect == true) {
       this.state.selectCount.push(item.item.row);
       this.state.photos[item.item.row].isSelect = this.state.selectCount.length;
+      DeviceEventEmitter.emit('Cell'+item.item.row, '通知来了');
     } else {
       this.state.selectCount.pop();
       for (let i=0; i<this.state.photos.length; i++) {
         if (this.state.photos[i].isSelect > this.state.photos[item.item.row].isSelect) {
           this.state.photos[i].isSelect -= 1;
+          DeviceEventEmitter.emit('Cell'+i, '通知来了');
         }
       }
       this.state.photos[item.item.row].isSelect = 0;
-      this.setState({
-        photos: this.state.photos
-      })
+      // this.setState({
+      //   photos: this.state.photos
+      // })
     }
   }
 
@@ -129,21 +135,33 @@ class Photo extends Component{
       <FlatList
         style={{flex: 1}}
         numColumns={3}
-        data={this.state.photos}
+        data={[{photo: true, key: 0}, ...this.state.photos]}
         columnWrapperStyle={styles.row}
-        // data={[{key: 'a'}, {key: 'b'}, {key: '1'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}, {key: 'b'}]}
         renderItem={this._renderItem}
         onEndReached={this._onLoadMore}
       />
     )
   }
-  _renderItem=(item)=>{
+  renderLoadingView() {
     return (
-      <Cell 
-        item={item}
-        onPress={this._onItemPress}
-      />
-    )
+      <View style={styles.load} >
+        <Text>Loading image......</Text>
+      </View>
+    );
+  }
+  _renderItem=(item)=>{
+    if (item.item.photo == true) {
+      return (
+        <CameraCell/>
+      )
+    } else {
+      return (
+        <PhotoCell 
+          item={item}
+          onPress={this._onItemPress}
+        />
+      )
+    }
   }
   render() { 
     return (
@@ -163,13 +181,13 @@ const styles = StyleSheet.create({
    },
    row: {
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 5,
+    marginTop: 5,
    },
-   item: {
-
-   },
+   load: {
+    flex: 1,
+   }
 });
-
 
 // reducer
 const mapStateToProps = state => ({
