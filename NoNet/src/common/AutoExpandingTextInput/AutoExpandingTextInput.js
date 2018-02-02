@@ -10,9 +10,9 @@ class AutoExpandingTextInput extends Component {
     this.state = {
       text: '',
       height: 0,
+      editable: true
     };
   }
-
   onContentSizeChange(event) {
     this.setState({
       text: event.nativeEvent.text,
@@ -21,10 +21,26 @@ class AutoExpandingTextInput extends Component {
     this.props.onContentSizeChange();
   }
 
+  // 是否在编辑
+  isFocused() {
+    return this.refs.content.isFocused()
+  }
+
+  // 禁用/启用编辑
+  disableEdit() {
+    this.setState({
+      editable: false
+    })
+  }
+  enableEdit() {
+    this.setState({
+      editable: true
+    })
+  }
+  // 结束编辑
   endEditing() {
     this.refs.content.blur();
   }
-
   render() {
     const { style, textHeightMin, textHeightMax } = this.props;
     let textHeight = Math.max(textHeightMin, this.state.height);
@@ -34,6 +50,7 @@ class AutoExpandingTextInput extends Component {
     return (
       <TextInput
         {...this.props}
+        editable={this.state.editable}
         ref={"content"}
         multiline={true}
         onContentSizeChange={(event)=>this.onContentSizeChange(event)}
@@ -46,7 +63,7 @@ class AutoExpandingTextInput extends Component {
 }
 
 AutoExpandingTextInput.defaultProps = {
-  textHeightMin: 0,
+  textHeightMin: 150,
   textHeightMax: 100000,
 }
 AutoExpandingTextInput.propTypes = {

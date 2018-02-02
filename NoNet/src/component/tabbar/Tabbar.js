@@ -49,7 +49,8 @@ import {
   Set,
   List,
   Diary,
-  Edit
+  Edit,
+  Photo
 } from '../index';
 
 getController = (data) => {
@@ -209,6 +210,18 @@ export default MyApp = StackNavigator({
     'navFontSize': NAVIGATION_FONT_SIZE,
     'isGestures': false,
     'tabTitle': '编辑日记',
+    'icon_normal': tabBar_detail_n,
+    'icon_select': tabBar_detail_s,
+  }),
+  Photo: getController({
+    'screenName': Photo, 
+    'navTitle': '相册', 
+    'isLeft': false, 
+    'isRight': false,
+    'isBig': false,
+    'navFontSize': NAVIGATION_FONT_SIZE,
+    'isGestures': false,
+    'tabTitle': '相册',
     'icon_normal': tabBar_detail_n,
     'icon_select': tabBar_detail_s,
   }),

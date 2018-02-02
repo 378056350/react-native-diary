@@ -11,6 +11,7 @@ import KKInputHUD, { HUD } from './KKInputHUD/KKInputHUD';
 import AutoExpandingTextInput from './AutoExpandingTextInput/AutoExpandingTextInput';
 import KeyboardAccess from './KeyboardAccess/KeyboardAccess';
 import DateManager from './DateManager/DateManager';
+import Swipe from './Swipe/Swipe';
 
 export {
   Line,
@@ -26,4 +27,5 @@ export {
   AutoExpandingTextInput,
   KeyboardAccess,
   DateManager,
+  Swipe
 }
