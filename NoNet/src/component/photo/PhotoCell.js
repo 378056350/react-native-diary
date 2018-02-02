@@ -37,7 +37,7 @@ class PhotoCell extends Component {
     this.show();
     this.props.onPress(this.props.item, this.state.borderWidth == 0 ? true : false);
     this.setState({
-      borderWidth: this.state.borderWidth == 0 ? 5 : 0
+      borderWidth: this.state.borderWidth == 0 ? 3 : 0
     })
   }
   
@@ -83,11 +83,11 @@ class PhotoCell extends Component {
         }]}
       >
         <Image 
-        style={[styles.icon, {borderRadius: this.state.borderWidth}]} 
-        source={{uri: this.props.item.item.node.image.uri}}
-        onLoad={this._onLoad}
+          style={[styles.icon, {borderRadius: this.state.borderWidth}]} 
+          source={{uri: this.props.item.item.node.image.uri}}
+          onLoad={this._onLoad}
         />
-        <View style={[styles.number, {opacity: this.state.borderWidth == 5 ? 1 : 0}]}>
+        <View style={[styles.number, {opacity: this.state.borderWidth == 3 ? 1 : 0}]}>
           <Text style={styles.name}>{this.state.name}</Text>
         </View>
       </Animated.View>
@@ -107,21 +107,21 @@ const styles = StyleSheet.create({
   container: {
     width: (ScreenWidth - 20) / 3,
     height: (ScreenWidth - 20) / 3,
-    borderColor: 'orange',
-    backgroundColor: 'orange',
+    borderColor: '#87CEFA',
+    backgroundColor: '#87CEFA',
   },
   icon: {
     flex: 1,
     borderRadius: 10,
   },
   number: {
-    backgroundColor: 'orange',
+    backgroundColor: '#87CEFA',
     position: 'absolute',
-    right: -5,
-    top: -5,
-    width: 30,
-    height: 30,
-    borderRadius: 5,
+    right: -3,
+    top: -3,
+    width: 25,
+    height: 25,
+    borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
   },

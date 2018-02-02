@@ -169,7 +169,7 @@ class Edit extends PureComponent {
     return (
       <Navigation 
         style={styles.nav}
-        leftText={'返回'}
+        leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
         rightText={"存储"}
         rightClick={this._save}

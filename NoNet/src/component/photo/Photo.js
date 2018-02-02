@@ -20,10 +20,7 @@ import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast,
 // action
 import { dataAction } from '../../redux/action/index';
 import { StreamColor } from '../../utils/index';
- 
-//网络图片地址
-var imgURL = "http://www.hangge.com/blog/images/logo.png"
- 
+
 class Photo extends Component {
 
   //==================== 系统 ====================//

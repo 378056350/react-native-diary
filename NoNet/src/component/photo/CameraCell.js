@@ -17,7 +17,11 @@ class CameraCell extends Component {
   render() { 
     return (
       <View style={styles.container}>
-        <Text>qweqwe</Text>
+        <Image 
+          source={require('../../assets/images/photo.png')}
+          resizeMode={"contain"}
+          style={styles.icon}
+        />
       </View>
     )
   }
@@ -28,9 +32,14 @@ const styles = StyleSheet.create({
   container: {
     width: (ScreenWidth - 20) / 3,
     height: (ScreenWidth - 20) / 3,
-    borderColor: 'orange',
-    backgroundColor: 'orange',
+    backgroundColor: 'rgba(233,233,233,1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  icon: {
+    width: (ScreenWidth - 20) / 3 / 3,
+    height: (ScreenWidth - 20) / 3 / 3,
+  }
 });
 
 export default CameraCell;

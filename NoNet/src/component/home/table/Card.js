@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   InteractionManager 
 } from 'react-native';
+import Positive from './Positive';
+import Opposite from './Opposite';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
@@ -67,12 +69,13 @@ class Card extends PureComponent {
         duration: DURATION,
         easing: Easing.linear
       }).start((result)=>{
-        this.refs.positive.setNativeProps({
-          style: {
-            opacity: 0,
-          },
-          onPress: undefined
-        });
+        // this.refs.positive.setNativeProps({
+        //   style: {
+        //     opacity: 0,
+        //   },
+        //   onPress: undefined
+        // });
+        this.refs.positive.hidden();
         this.showOpposite();
       });
     })
@@ -107,12 +110,13 @@ class Card extends PureComponent {
         duration: DURATION,
         easing: Easing.linear
       }).start((result)=>{
-        this.refs.positive.setNativeProps({
-          style: {
-            opacity: 1
-          },
-          onPress: this.props.onPositive
-        });
+        // this.refs.positive.setNativeProps({
+        //   style: {
+        //     opacity: 1
+        //   },
+        //   onPress: this.props.onPositive
+        // });
+        this.refs.positive.display(this);
         this.showPositive();
       });
     })
@@ -137,12 +141,15 @@ class Card extends PureComponent {
   //==================== 控件 ====================//
   positive() {
     return (
-      <View ref={"positive"} style={styles.positive}></View>
+      <Positive 
+        ref={"positive"}
+        month={this.props.month}
+      />
     )
   }
   opposite() {
     return (
-      <View ref={"opposite"} style={styles.opposite}></View>
+      <Opposite month={this.props.month}/>
     )
   }
   shadow() {
@@ -158,36 +165,36 @@ class Card extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-          <TouchableOpacity activeOpacity={1} onPress={this._onPress}>
-            <Animated.View ref={"subview"} style={[styles.subview,{
-              transform: [
-                  //透视
-                  {perspective: 1500},
-                  {scale: 0.9},
-                  //3d 旋转
-                  {
-                      rotateY: this.state.rotateValue.interpolate({
-                          inputRange: [0, 360],
-                          outputRange: ['0deg','360deg'],
-                      })
-                  },
-                  {
-                      scale: this.state.rotateValue.interpolate({
-                          inputRange: [0, 90, 180, 270, 360],
-                          outputRange: [1, 0.95, 1, 0.95, 1]})     
-                  },
-                  {
-                      translateY: this.state.rotateValue.interpolate({
-                          inputRange: [0, 90, 180, 270, 360],
-                          outputRange: [0, 5, 0, 5, 0]}) 
-                  }
-              ]
-            }]}>
-              {this.opposite()}
-              {this.positive()}
-              {this.shadow()}
-            </Animated.View>
-          </TouchableOpacity>
+        <TouchableOpacity activeOpacity={1} onPress={this._onPress}>
+          <Animated.View ref={"subview"} style={[styles.subview,{
+            transform: [
+                //透视
+                {perspective: 1500},
+                {scale: 0.9},
+                //3d 旋转
+                {
+                    rotateY: this.state.rotateValue.interpolate({
+                        inputRange: [0, 360],
+                        outputRange: ['0deg','360deg'],
+                    })
+                },
+                {
+                    scale: this.state.rotateValue.interpolate({
+                        inputRange: [0, 90, 180, 270, 360],
+                        outputRange: [1, 0.95, 1, 0.95, 1]})     
+                },
+                {
+                    translateY: this.state.rotateValue.interpolate({
+                        inputRange: [0, 90, 180, 270, 360],
+                        outputRange: [0, 5, 0, 5, 0]}) 
+                }
+            ]
+          }]}>
+            {this.opposite()}
+            {this.positive()}
+            {this.shadow()}
+          </Animated.View>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -207,24 +214,6 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.1,
-  },
-  positive: {
-    backgroundColor: '#87CEFA',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
-    borderRadius: 10,
-  },
-  opposite: {
-    backgroundColor: 'white',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
-    borderRadius: 10,
   },
   shadow: {
     backgroundColor: 'black',

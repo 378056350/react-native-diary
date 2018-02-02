@@ -32,6 +32,7 @@ class Table extends Component {
         <Card 
           ref={"card"+i} 
           key={i} 
+          month={i+1}
           onPositive={()=>this._onPositive(i)} 
           onOpposite={()=>this._onOpposite(i)}
         />

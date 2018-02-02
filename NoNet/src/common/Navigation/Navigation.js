@@ -84,10 +84,14 @@ class Navigation extends Component {
           activeOpacity={0.6} 
           onPress={this.props.leftClick}
         >
-          <Image source={this.props.leftIcon} style={[styles.backIcon,{
-            opacity: this.props.leftIcon == false ? 0 : 1,
-            width: this.props.leftIcon ? 20 : 0,
-          }]}/>
+          <Image 
+            source={this.props.leftIcon}
+            resizeMode={"contain"}
+            style={[styles.backIcon,{
+              opacity: this.props.leftIcon == false ? 0 : 1,
+              width: this.props.leftIcon ? 20 : 0,
+            }]}
+          />
           <Text style={styles.backText}>{this.props.leftText}</Text>
         </TouchableOpacity>
 
@@ -103,6 +107,7 @@ class Navigation extends Component {
 
         <TouchableOpacity 
           style={[styles.touchRight]} 
+          resizeMode={"contain"}
           disabled={this.state.rightDisabled} 
           activeOpacity={0.6} 
           onPress={this.rightClick}

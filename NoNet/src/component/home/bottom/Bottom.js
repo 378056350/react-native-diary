@@ -1,6 +1,6 @@
 // Default
 import React, { Component, PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
 // Utils
 import { Button } from '../../../common/index';
 import CurrentDay from './CurrentDay';
@@ -29,8 +29,28 @@ class Bottom extends PureComponent {
       <View style={styles.container}>
         <CurrentDay/>
         <View style={styles.subview}>
-          <Button onPress={this._edit} customView={<Image style={{width: 40, height: 40}} source={require('../../../assets/images/home_edit.png')}/>}/>
-          <Button style={styles.turn} onPress={this._onChange} customView={<Image style={{width: 40, height: 40}} source={require('../../../assets/images/home_edit.png')}/>}/>
+          <Button 
+            style={styles.button} 
+            onPress={this._edit} 
+            customView={
+              <Image 
+                style={styles.icon} 
+                resizeMode={"contain"}
+                source={require('../../../assets/images/icon_pencil.png')}
+              />
+            }
+          />
+          <Button 
+            style={[styles.turn, styles.button]} 
+            onPress={this._onChange} 
+            customView={
+              <Image 
+                style={styles.icon} 
+                resizeMode={"contain"}
+                source={require('../../../assets/images/icon_calendar.png')}
+              />
+            }
+          />
         </View>
       </View>
     );
@@ -46,10 +66,27 @@ const styles = StyleSheet.create({
   },
   subview: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   turn: {
     marginLeft: 15,
-  }
+  },
+  button: {
+    width: 35,
+    height: 35,
+    backgroundColor: 'rgba(50,50,50,1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    shadowOffset: {width: 0, height: 0},
+    shadowColor: 'black',
+    shadowOpacity: 0.2,
+    shadowRadius: 2
+  },
+  icon: {
+    width: 15,
+    height: 15,
+  },
 });
 
 export default Bottom;

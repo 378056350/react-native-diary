@@ -19,6 +19,10 @@ export default class DateManager {
     var date = new Date();
     return date.getFullYear();
   }
+  static getMonthEn(month) {
+    let months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+    return months[month]
+  }
   /** 获取月 */
   static getMonth() {
       var date = new Date();

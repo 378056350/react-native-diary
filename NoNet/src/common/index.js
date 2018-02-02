@@ -12,6 +12,7 @@ import AutoExpandingTextInput from './AutoExpandingTextInput/AutoExpandingTextIn
 import KeyboardAccess from './KeyboardAccess/KeyboardAccess';
 import DateManager from './DateManager/DateManager';
 import Swipe from './Swipe/Swipe';
+import Calender from './Calender/Calender';
 
 export {
   Line,
@@ -27,5 +28,6 @@ export {
   AutoExpandingTextInput,
   KeyboardAccess,
   DateManager,
-  Swipe
+  Swipe,
+  Calender
 }

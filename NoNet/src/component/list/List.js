@@ -60,8 +60,9 @@ class List extends Component {
   nav() {
     return (
       <Navigation 
-        leftText={'返回'}
+        leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
+        text={"JAUNARY/2018"}
       />
     )
   }

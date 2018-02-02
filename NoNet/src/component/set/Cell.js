@@ -1,6 +1,6 @@
 // Default
 import React, { Component, PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableHighlight } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableHighlight, Switch } from 'react-native';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
 // Utils
@@ -12,15 +12,43 @@ class Cell extends PureComponent {
     // this.props.onPress(item)
   }
 
+  detail() {
+    if (this.props.detail) {
+      return (
+        <Text style={styles.detail}>{this.props.detail}</Text>
+      )
+    }
+  }
+  next() {
+    if (this.props.next) {
+      return (
+        <Image 
+          style={styles.icon} 
+          source={require('../../assets/images/arrow_next.png')}
+        />
+      )
+    }
+  }
+  switch() {
+    if (this.props.isSwitch == undefined || this.props.isSwitch == false) {
+      return (
+        <View style={styles.subview}>
+          {this.detail()}
+          {this.next()}
+        </View>
+      )
+    } else {
+      return (
+        <Switch/>
+      )
+    }
+  }
   render() {
     return (
       <TouchableHighlight underlayColor={'#666'} onPress={()=>this._onPress(this.props.item)}>
         <View style={styles.container}>
           <Text style={styles.name}>{this.props.item.name}</Text>
-          <View style={styles.subview}>
-            <Text style={styles.detail}>SectionHeader</Text>
-            <Image style={styles.icon} source={require('../../assets/images/arrow_next.png')}/>
-          </View>
+          {this.switch()}
         </View>
       </TouchableHighlight>
     );

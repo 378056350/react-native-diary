@@ -2,6 +2,7 @@
 import React, { Component, PureComponent } from 'react';
 import { Platform, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 // Utils
+import { DateManager } from '../../../common/index';
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
 class CurrentDay extends PureComponent {
@@ -12,11 +13,16 @@ class CurrentDay extends PureComponent {
       isDetail: false
     }
   }
+  text() {
+    let month = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+    let str = month[DateManager.getMonth()+1] + ", "+DateManager.getMonth()+"/"+DateManager.getYear();
+    return str;
+  }
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.top}>Today</Text>
-        <Text style={styles.bottom}>JAN, 30/2018</Text>
+        <Text style={styles.bottom}>{this.text()}</Text>
       </View>
     );
   }
@@ -28,8 +34,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(222,222,222,1)',
     borderWidth: 1,
     height: 40,
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 35,
+    paddingRight: 35,
     justifyContent: 'center',
   },
   top: {
@@ -38,6 +44,7 @@ const styles = StyleSheet.create({
   },
   bottom: {
     fontSize: 10,
+    fontWeight: '500',
     color: 'rgba(50,50,50,1)'
   }
 });

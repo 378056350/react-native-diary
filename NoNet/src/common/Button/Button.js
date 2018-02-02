@@ -7,18 +7,22 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
 class Button extends Component {
 
   render() {
     return (
-      <TouchableOpacity style={this.props.style} activeOpacity={0.6} onPress={()=>{
+      <TouchableOpacity 
+        style={this.props.style} 
+        activeOpacity={1} 
+        onPress={()=>{
           if (this.props.onPress != undefined) {
             this.props.onPress();
           }
-      }}>
+        }}
+      >
         {this.props.customView}
       </TouchableOpacity>
     );

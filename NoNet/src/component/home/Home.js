@@ -73,9 +73,9 @@ class Home extends Component {
   nav() {
     return (
       <Navigation 
-        leftText={'搜索'}
-        rightText={'设置'}
+        leftIcon={require('../../assets/images/icon_search.png')}
         rightClick={this._set}
+        rightIcon={require('../../assets/images/icon_menu.png')}
       />
     )
   }
