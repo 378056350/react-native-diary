@@ -1,6 +1,21 @@
 // Default
-import React, { PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Image, PanResponder, InteractionManager, Easing, Animated, Keyboard, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import { 
+  Platform, 
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  PanResponder, 
+  InteractionManager, 
+  Easing, 
+  Animated, 
+  Keyboard, 
+  TextInput, 
+  ScrollView, 
+  TouchableOpacity,
+  Alert
+} from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -13,7 +28,7 @@ import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor, TitleColor } from '../../utils/index';
 
 var that;
-class Edit extends PureComponent {
+class Edit extends Component {
   
   //==================== 系统 ====================//
   static navigationOptions = {
@@ -37,7 +52,8 @@ class Edit extends PureComponent {
       ],
       currentWeatherIndex: 0,
       keyboardH: 0,
-      titleEditable: true
+      titleEditable: true,
+      photos: []
     };  
   }  
   componentWillMount () {
@@ -156,12 +172,22 @@ class Edit extends PureComponent {
   _onAddPress=()=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
-      navigate("Photo");
+      navigate("Photo", {callback: (data)=>{
+        this.setState({
+          photos: data
+        })
+      }});
     })
   }
   // 删除图片
-  _onRemovePress=()=>{
-
+  _onRemovePress=(i)=>{
+    InteractionManager.runAfterInteractions(() => {
+      let arr = this.state.photos;
+      arr.splice(i, 1)
+      this.setState({
+        photos: arr
+      })
+    })
   }
 
   //==================== 控件 ====================//
@@ -204,10 +230,12 @@ class Edit extends PureComponent {
         }}
         addPress={this._onAddPress}
         removePress={this._onRemovePress}
+        photos={this.state.photos}
       />
     )
   }
   content() {
+    const { params } = this.props.navigation.state;
     return (
       <ScrollView 
         scrollEventThrottle={10}
@@ -223,17 +251,17 @@ class Edit extends PureComponent {
         )}
       >
         <View style={styles.subcontent}>
-          <Text style={styles.date}>asdasdas</Text>
+          <Text style={styles.date}>{params.name}</Text>
           <TextInput style={styles.name} editable={this.state.titleEditable} ref={"title"} onFocus={this._onTitleFocus} autoCorrect={false} placeholder={"标题"} onLayout={this._onTitleLayout}/>
           <TouchableOpacity activeOpacity={1} style={styles.weather} onPress={this._onWeather}>
             <Image style={{flex: 1, width: 25}} resizeMode={"contain"} source={this.state.icon[this.state.currentWeatherIndex]}/>
           </TouchableOpacity>
           <AutoExpandingTextInput  
+            placeholder={"写下你的今天..."}
             onFocus={this._onContentFocus}
             ref={"content"}
             style={styles.detail} 
             autoCorrect={false}
-            // onChangeText={(newText)=>{this._onChangeText(newText)}} 
             onContentSizeChange={this._onContentSizeChange} 
           />   
         </View>
@@ -317,18 +345,18 @@ const styles = StyleSheet.create({
     marginTop: ScreenWidth / 5 * 3 + NAVIGATION_HEIGHT,
   },
   date: {
-    fontSize: 14,
-    color: 'rgba(170,170,170,1)'
+    fontSize: 9,
+    color: 'rgba(200,200,200,1)',
+    fontWeight: '400',
   },
   name: {
-    fontSize: 18,
+    fontSize: 16,
     width: ScreenWidth - 40,
-    backgroundColor: 'red',
     height: 20,
     color: TitleColor,
     textAlign: 'center',
     marginTop: 5,
-    fontWeight: '400',
+    fontWeight: '600',
   },
   weather: {
     width: 25,
@@ -337,13 +365,12 @@ const styles = StyleSheet.create({
   },
   detail: {
     alignSelf: 'flex-start',
-    fontSize: 14,
+    fontSize: 13,
     color: 'rgba(170,170,170,1)',
-    fontWeight: '300',
+    fontWeight: '400',
     lineHeight: 23,
     textAlign: 'justify',
     marginTop: 15,
-    backgroundColor: 'gray',
     width: ScreenWidth - 40,
     height: 200,
   },

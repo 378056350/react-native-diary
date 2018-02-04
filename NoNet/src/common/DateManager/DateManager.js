@@ -40,6 +40,14 @@ export default class DateManager {
     let months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
     return months[month]
   }
+  /** 获取月份英文全拼 */
+  static getMonthEnglish(month) {
+    if (month == null) {
+      month = DateManager.getMonth()-1
+    }
+    let months = ["JANUARY","FEBRUARY","MARCCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+    return months[month]
+  }
   /** 获取月 */
   static getMonth() {
       var date = new Date();
@@ -52,8 +60,15 @@ export default class DateManager {
   }
   /** 获取星期几 */
   static getWeekday(y, m, d) {
-    var l = ["日","一","二","三","四","五","六"];
+    if (y == null) {
+      y = DateManager.getYear();
+      m = DateManager.getMonth();
+      d = DateManager.getDay();
+    }
+
+    var l1 = ["日","一","二","三","四","五","六"];
+    var l2 = ["SUN","MON","TUE","WED","THUR","FRI","SAT"];
     var d = new Date(y, m, d).getDay();
-    return l[d];
+    return [l1[d],l2[d]];
   }
 };

@@ -10,7 +10,10 @@ class Top extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity activeOpacity={1} onPress={this.props.onPress}>
-          <Text style={styles.text}>{this.props.name}</Text>
+          <View style={styles.content}>
+            <Text style={styles.text}>{this.props.name}</Text>
+            <Image style={styles.icon} resizeMode={"contain"} source={require('../../../assets/images/icon_arrow_down.png')}/>
+          </View>
         </TouchableOpacity>
       </View>
     );
@@ -22,13 +25,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 30,
-    // backgroundColor: 'red',
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   text: {
     height: 30,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 10,
+    paddingRight: 5,
     lineHeight: 30,
+    color: 'rgba(75,75,75,1)',
+    fontWeight: '500',
+  },
+  icon: {
+    width: 12,
+    height: 12,
   }
 });
 

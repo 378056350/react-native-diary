@@ -23,6 +23,7 @@ class Home extends PureComponent {
     this.state = {
       // 选择年份
       currentYear: DateManager.getYear(),
+      isDetail: false
     }
   }
 
@@ -42,7 +43,8 @@ class Home extends PureComponent {
   _onPositive=(i)=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
-      navigate("List");
+      
+      navigate("List", {name: DateManager.getMonthEnglish(i)+"/"+this.state.currentYear});
     })
   }
   // 反面
@@ -75,20 +77,29 @@ class Home extends PureComponent {
   // 编辑日记
   _onBottomEditClick=()=>{
     InteractionManager.runAfterInteractions(() => {
+      let week = DateManager.getWeekday()[1];
+      let month = DateManager.getMonthEnglish();
+      let day = DateManager.getDay();
+      let year = DateManager.getYear();
       const { navigate } = this.props.navigation;
-      navigate("Edit");
+      navigate("Edit", {"name": week + '. ' + month + " " + day + "/" + year});
     })
   }
   // 切换卡片正反
   _onBottomChangClick=(isDetail)=>{
-    this.refs.table.show(isDetail);
+    if (this.refs.table.getAnimated() == false) {
+      this.refs.table.show(isDetail);
+      this.setState({
+        isDetail: !this.state.isDetail
+      })
+    }
   }
 
   //==================== 控件 ====================//
   nav() {
     return (
       <Navigation 
-        leftIcon={require('../../assets/images/icon_search.png')}
+        // leftIcon={require('../../assets/images/icon_search.png')}
         rightClick={this._set}
         rightIcon={require('../../assets/images/icon_menu.png')}
       />
@@ -112,6 +123,7 @@ class Home extends PureComponent {
   bottom() {
     return (
       <Bottom 
+        isDetail={this.state.isDetail}
         onChange={this._onBottomChangClick}
         onEdit={this._onBottomEditClick}
         onPress={this._onBottomCurrentClick}

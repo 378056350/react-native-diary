@@ -47,9 +47,8 @@ class Calender extends PureComponent {
   //==================== 控件 ====================//
   DayComponent(day, month, color, isToday) {
     return (
-      <TouchableOpacity  activeOpacity={1} onPress={()=>this.props.onPress(day, month)}>
+      <TouchableOpacity key={day} activeOpacity={1} onPress={()=>this.props.onPress(day, month)}>
         <View 
-          key={day}
           style={[styles.day, {
             opacity: day > 0 ? 1 : 0,
           }]}

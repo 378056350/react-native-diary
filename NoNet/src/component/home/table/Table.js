@@ -6,8 +6,20 @@ import Top from '../top/Top';
 import Card from './Card';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
+import DateManager from '../../../common/DateManager/DateManager';
 
 class Table extends Component {
+
+  getAnimated() {
+    return this.refs["card"+1].getAnimated()
+  }
+  componentDidMount() {
+    this.refs.scroll.scrollTo({
+      x: (DateManager.getMonth() - 1) * (ScreenWidth - 80), 
+      y: 0, 
+      animated: false
+    })
+  }
 
   //==================== 动画 ====================//
   show(isDetail) {
@@ -21,6 +33,11 @@ class Table extends Component {
       y: 0, 
       animated: true
     })
+  }
+
+  //==================== 数据 ====================//
+  getCurrentMonth() {
+    console.log(this.refs.scroll);
   }
 
   //==================== 点击 ====================//

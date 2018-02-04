@@ -19,10 +19,30 @@ class Bottom extends PureComponent {
   //==================== 控件 ====================//
   _onChange=()=>{
     this.props.onChange(!this.state.isDetail);
-    this.state.isDetail = !this.state.isDetail;
+    this.setState({
+      isDetail: !this.state.isDetail
+    })
   }
   _edit=()=>{
     this.props.onEdit();
+  }
+  calender=()=>{
+    return (
+      <Button 
+        style={[styles.turn, styles.button, {
+          backgroundColor: this.props.isDetail == true ? "#87CEFA" : 'rgba(50,50,50,1)',
+          shadowColor: this.props.isDetail == true ? "#87CEFA" : 'rgba(50,50,50,1)',
+        }]} 
+        onPress={this._onChange} 
+        customView={
+          <Image 
+            style={styles.icon} 
+            resizeMode={"contain"}
+            source={this.props.isDetail == false ? require('../../../assets/images/icon_calendar.png') : require('../../../assets/images/icon_turn_back.png')}
+          />
+        }
+      />
+    )
   }
   render() {
     return (
@@ -40,17 +60,7 @@ class Bottom extends PureComponent {
               />
             }
           />
-          <Button 
-            style={[styles.turn, styles.button]} 
-            onPress={this._onChange} 
-            customView={
-              <Image 
-                style={styles.icon} 
-                resizeMode={"contain"}
-                source={require('../../../assets/images/icon_calendar.png')}
-              />
-            }
-          />
+          {this.calender()}
         </View>
       </View>
     );

@@ -34,7 +34,9 @@ class Photo extends Component {
       photos: [],
       noMore: true,
       lastCursor: null,
+      // [0, 1, 2]
       selectCount: [],
+      photoCount: []
     };
   }
   componentDidMount() {
@@ -92,11 +94,13 @@ class Photo extends Component {
 
   //==================== 点击 ====================//
   _back=()=>{
-    const { goBack } = this.props.navigation;
+    const {goBack} = this.props.navigation;
     goBack();
   }
   _save=()=>{
-    
+    const {goBack, state} = this.props.navigation;
+    state.params.callback(this.state.photoCount);
+    goBack();
   }
   _onItemPress=(item, isSelect)=>{
     // 超过9张
@@ -107,10 +111,12 @@ class Photo extends Component {
     // 点击操作
     if (isSelect == true) {
       this.state.selectCount.push(item.item.row);
+      this.state.photoCount.push(item.item.node.image.uri);
       this.state.photos[item.item.row].isSelect = this.state.selectCount.length;
       DeviceEventEmitter.emit('Cell'+item.item.row, '通知来了');
     } else {
       this.state.selectCount.pop();
+      this.state.photoCount.pop();
       for (let i=0; i<this.state.photos.length; i++) {
         if (this.state.photos[i].isSelect > this.state.photos[item.item.row].isSelect) {
           this.state.photos[i].isSelect -= 1;

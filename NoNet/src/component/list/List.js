@@ -58,11 +58,13 @@ class List extends Component {
 
   //==================== 控件 ====================//
   nav() {
+    const { params } = this.props.navigation.state;
     return (
       <Navigation 
         leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
-        text={"JAUNARY/2018"}
+        // text={"JAUNARY/2018"}
+        text={params.name}
       />
     )
   }

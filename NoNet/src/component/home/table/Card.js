@@ -35,6 +35,9 @@ class Card extends PureComponent {
   componentDidMount() {
     this.refs.subview.shadowOpacity = 5;
   }
+  getAnimated() {
+    return this.state.isAnimated
+  }
 
   //==================== 点击 ====================//
   _onPress=()=>{

@@ -11,6 +11,7 @@ import {
   Animated,
   TouchableOpacity, 
   TouchableHighlight, 
+  Alert,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { NAVIGATION_HEIGHT } from '../../component/tabbar/TabbarSetting';
@@ -20,13 +21,35 @@ import { TitleColor } from '../../utils/UIUtils';
 
 class Swipe extends Component {
 
+  //==================== 系统 ====================//
+  constructor(props) {  
+    super(props);  
+    this.state = {  
+      currentIndex: 0
+    };  
+  }  
+
+  //==================== 点击 ====================//
+  _removePress=()=>{
+    Alert.alert(
+      '',
+      '删除这张照片?',
+      [
+        {text: '取消', onPress: () => console.log(''), style: 'cancel'},
+        {text: '删除', onPress: () => this.props.removePress(this.state.currentIndex)},
+      ]
+    )
+  }
+
   //==================== 控件 ====================//
   swiper() {
     return (
       <Swiper 
+        ref={"swiper"}
         activeDot={<View style={{backgroundColor: 'white', width: 6, height: 6, borderRadius: 3, marginLeft: 4, marginRight: 4, marginTop: 4, marginBottom: 4,}} />}
         dot={<View style={{backgroundColor:'rgba(255,255,255,.4)', width: 6, height: 6, borderRadius: 3, marginLeft: 4, marginRight: 4, marginTop: 4, marginBottom: 4,}} />}
         paginationStyle={{bottom: 10}}
+        onIndexChanged={(index)=>{this.state.currentIndex = index}}
       >
         {this.swiperIcon()}
       </Swiper>
@@ -34,12 +57,22 @@ class Swipe extends Component {
   }
   swiperIcon() {
     let arr = [];
-    for (let i=0; i<3; i++) {
-      arr.push (
-        <View key={0} style={styles.slide1}>
-          <Text style={styles.text}>{i}</Text>
-        </View>
-      )
+    if (this.props.photos.length == 0) {
+      for (let i=0; i<2; i++) {
+        arr.push (
+          <View key={i} style={styles.slide}/>
+        )
+      }
+    } else {
+      for (let i=0; i<this.props.photos.length; i++) {
+        arr.push (
+          <Image 
+            key={i} 
+            style={styles.slide} 
+            source={{'uri': this.props.photos[i]}}
+          />
+        )
+      }
     }
     return arr;
   }
@@ -62,7 +95,7 @@ class Swipe extends Component {
       <TouchableOpacity 
         activeOpacity={0.8} 
         style={styles.button}
-        onPress={this.props.removePress}
+        onPress={this._removePress}
       >
         <Image 
           style={styles.buttonImg} 
@@ -73,7 +106,7 @@ class Swipe extends Component {
   }
   render() {
     return (
-      <Animated.View style={this.props.style}>
+      <Animated.View style={[this.props.style, {backgroundColor: 'rgba(200,200,200,1)'}]}>
         <Animated.View style={this.props.substyle}>
           {this.swiper()}
           <View 
@@ -82,7 +115,8 @@ class Swipe extends Component {
             }]} 
             pointerEvents={"box-none"}
           >
-            {this.add()}
+          {this.add()}
+          {this.props.photos.length != 0 ? this.remove() : null}
           </View>
         </Animated.View>
       </Animated.View>
@@ -105,35 +139,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 10,
+    marginRight: 10,
   },
   buttonImg: {
     width: ScreenWidth / 4 / 3, 
     height: ScreenWidth / 4 / 3
   },
-  slide1: {
+  slide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9DD6EB',
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
   }
 });
 
+Swipe.defaultProps = {
+  photos: []
+}
+Swipe.propTypes = {
+  photos: PropTypes.array.isRequired,
+}
 
 export default Swipe;
