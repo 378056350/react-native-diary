@@ -13,6 +13,7 @@ import KeyboardAccess from './KeyboardAccess/KeyboardAccess';
 import DateManager from './DateManager/DateManager';
 import Swipe from './Swipe/Swipe';
 import Calender from './Calender/Calender';
+import RealmManager from './RealmManager/RealmManager';
 
 export {
   Line,
@@ -29,5 +30,6 @@ export {
   KeyboardAccess,
   DateManager,
   Swipe,
-  Calender
+  Calender,
+  RealmManager
 }

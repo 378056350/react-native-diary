@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import { Save } from '../../common/index';
 
 const initialState = {  
+    
     category: [[[],[]],[[],[]]],
     account: [],
     homeYear: 0,
