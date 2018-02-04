@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import DateManager from '../DateManager/DateManager';
-import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
+import { ScreenWidth, ScreenHeight, StreamColor, } from '../../utils/index';
 
 class Calender extends PureComponent {
 
@@ -47,16 +47,21 @@ class Calender extends PureComponent {
   //==================== 控件 ====================//
   DayComponent(day, month, color, isToday) {
     return (
-      <View key={day} style={[styles.day, {
-        opacity: day > 0 ? 1 : 0,
-      }]}>
-        <Text style={[styles.name, {
-          color: color
-        }]}>{day}</Text>
-        <View style={[styles.line, {
-          opacity: isToday == true ? 1 : 0
-        }]}/>
-      </View>
+      <TouchableOpacity  activeOpacity={1} onPress={()=>this.props.onPress(day, month)}>
+        <View 
+          key={day}
+          style={[styles.day, {
+            opacity: day > 0 ? 1 : 0,
+          }]}
+        >
+          <Text style={[styles.name, {
+            color: color
+          }]}>{day}</Text>
+          <View style={[styles.line, {
+            opacity: isToday == true ? 1 : 0
+          }]}/>
+        </View>
+      </TouchableOpacity>
     )
   }
   render() {
@@ -92,7 +97,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: 20,
     height: 3,
-    backgroundColor: 'black'
+    borderRadius: 3,
+    backgroundColor: 'rgba(100,100,100,1)'
   }
 });
 

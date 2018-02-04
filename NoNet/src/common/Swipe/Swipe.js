@@ -21,6 +21,28 @@ import { TitleColor } from '../../utils/UIUtils';
 class Swipe extends Component {
 
   //==================== 控件 ====================//
+  swiper() {
+    return (
+      <Swiper 
+        activeDot={<View style={{backgroundColor: 'white', width: 6, height: 6, borderRadius: 3, marginLeft: 4, marginRight: 4, marginTop: 4, marginBottom: 4,}} />}
+        dot={<View style={{backgroundColor:'rgba(255,255,255,.4)', width: 6, height: 6, borderRadius: 3, marginLeft: 4, marginRight: 4, marginTop: 4, marginBottom: 4,}} />}
+        paginationStyle={{bottom: 10}}
+      >
+        {this.swiperIcon()}
+      </Swiper>
+    )
+  }
+  swiperIcon() {
+    let arr = [];
+    for (let i=0; i<3; i++) {
+      arr.push (
+        <View key={0} style={styles.slide1}>
+          <Text style={styles.text}>{i}</Text>
+        </View>
+      )
+    }
+    return arr;
+  }
   add() {
     return (
       <TouchableOpacity 
@@ -53,25 +75,14 @@ class Swipe extends Component {
     return (
       <Animated.View style={this.props.style}>
         <Animated.View style={this.props.substyle}>
-          <Swiper 
-            activeDot={<View style={{backgroundColor: 'white', width: 6, height: 6, borderRadius: 3, marginLeft: 4, marginRight: 4, marginTop: 4, marginBottom: 4,}} />}
-            dot={<View style={{backgroundColor:'rgba(255,255,255,.4)', width: 6, height: 6, borderRadius: 3, marginLeft: 4, marginRight: 4, marginTop: 4, marginBottom: 4,}} />}
-            paginationStyle={{bottom: 10}}
+          {this.swiper()}
+          <View 
+            style={[styles.edit, {
+              opacity: this.props.opacity && this.props.opacity == 1 ? 1 : 0
+            }]} 
+            pointerEvents={"box-none"}
           >
-            <View style={styles.slide1}>
-              <Text style={styles.text}>Hello Swiper</Text>
-            </View>
-            <View style={styles.slide2}>
-              <Text style={styles.text}>Beautiful</Text>
-            </View>
-            <View style={styles.slide3}>
-              <Text style={styles.text}>And simple</Text>
-            </View>
-          </Swiper>
-          <View style={styles.edit} pointerEvents={"box-none"}>
             {this.add()}
-            {/* <View style={{width: 30}}/>
-            {this.remove()} */}
           </View>
         </Animated.View>
       </Animated.View>

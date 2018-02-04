@@ -179,6 +179,7 @@ class Edit extends PureComponent {
   swipe() {
     return (
       <Swipe 
+        opacity={1}
         style={[styles.swipe, {
           height: this.state.yOffset.interpolate({//映射到0.0,1.0之间
             inputRange: [-ScreenHeight, 0, ScreenWidth / 5 * 3, ScreenWidth / 5 * 30],

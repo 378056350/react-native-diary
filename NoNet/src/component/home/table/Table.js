@@ -27,8 +27,8 @@ class Table extends Component {
   _onPositive=(i)=>{
     this.props.onPositive(i);
   }
-  _onOpposite=(i)=>{
-    this.props.onOpposite(i);
+  _onOpposite=(day, month)=>{
+    this.props.onOpposite(day, month);
   }
 
   //==================== 控件 ====================//
@@ -41,7 +41,7 @@ class Table extends Component {
           key={i} 
           month={i+1}
           onPositive={()=>this._onPositive(i)} 
-          onOpposite={()=>this._onOpposite(i)}
+          onOpposite={this._onOpposite}
           currentYear={this.props.currentYear}
         />
       )

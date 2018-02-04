@@ -52,6 +52,7 @@ class Opposite extends PureComponent {
         style={styles.calender}
         month={this.props.month}
         currentYear={this.props.currentYear}
+        onPress={this.props.onCalenderPress}
       />
     )
   }

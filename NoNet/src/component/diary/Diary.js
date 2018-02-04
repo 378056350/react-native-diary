@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 // action
 import { dataAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, DateManager, Toast, KKInputHUD } from '../../common/index';
+import { Navigation, ThirdPicker, DateManager, Toast, Swipe, KKInputHUD } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor, TitleColor } from '../../utils/index';
@@ -45,11 +45,11 @@ class Diary extends PureComponent {
   }
   diary() {
     let arr = [];
-    for (let i=0; i<5; i++) {
+    for (let i=0; i<2; i++) {
       arr.push(
-        <View style={{width: ScreenWidth, height: ScreenHeight}}>
-          {this.swipe()}
+        <View key={i} style={{width: ScreenWidth, height: ScreenHeight}}>  
           {this.content()}
+          {this.swipe()}
         </View>
       )
     }
@@ -58,6 +58,7 @@ class Diary extends PureComponent {
         horizontal={true}
         pagingEnabled={true}
         showsHorizontalScrollIndicator={false}
+        style={{width: ScreenWidth, height: ScreenHeight}}
       >
         {arr}
       </ScrollView>
@@ -65,16 +66,31 @@ class Diary extends PureComponent {
   }
   swipe() {
     return (
-      <Animated.Image 
+      <Swipe 
         style={[styles.swipe, {
+          height: this.state.yOffset.interpolate({//映射到0.0,1.0之间
+            inputRange: [-ScreenHeight, 0, ScreenWidth / 5 * 3, ScreenWidth / 5 * 30],
+            outputRange: [ScreenWidth / 5 * 3, ScreenWidth / 5 * 3, 0, 0]
+          }),
+          transform: [{
+            translateY: this.state.yOffset.interpolate({//映射到0.0,1.0之间
+              inputRange: [-1000, 0, 1000],
+              outputRange: [1000, 0, 0]
+            })
+          }]
+        }]}
+        substyle={{
+          width: ScreenWidth,
+          height: ScreenWidth / 5 * 3,
           transform: [{
             translateY: this.state.yOffset.interpolate({//映射到0.0,1.0之间
               inputRange: [-1000, 0, ScreenWidth / 5 * 3],
-              outputRange: [1000, 0, -ScreenWidth / 5 * 2]
+              outputRange: [0, 0, -ScreenWidth / 5 * 2]
             })
           }]
-        }]} 
-        source={require('../../assets/images/swipe.png')}
+        }}
+        addPress={this._onAddPress}
+        removePress={this._onRemovePress}
       />
     )
   }
@@ -101,8 +117,6 @@ class Diary extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        {/* {this.swipe()}
-        {this.content()} */}
         {this.diary()}
         {this.nav()}
       </View>
@@ -114,9 +128,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    height: ScreenHeight
   },
   nav: {
-    backgroundColor: 'transparent', 
+    backgroundColor: 'white', 
     position: 'absolute'
   },
   swipe: {
@@ -124,6 +139,7 @@ const styles = StyleSheet.create({
     height: ScreenWidth / 5 * 3,
     backgroundColor: 'gray',
     position: 'absolute',
+    overflow: 'hidden',
   },
   content: {
     flex: 1,

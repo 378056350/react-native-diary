@@ -34,6 +34,12 @@ class PhotoCell extends Component {
   
   //==================== 点击 ====================//
   _onPress=()=>{
+    // 最多9张
+    if (this.props.selectCount > 8 && this.state.borderWidth == 0) {
+      this.props.onPress(this.props.item, true);
+      return;
+    }
+    // 显示
     this.show();
     this.props.onPress(this.props.item, this.state.borderWidth == 0 ? true : false);
     this.setState({

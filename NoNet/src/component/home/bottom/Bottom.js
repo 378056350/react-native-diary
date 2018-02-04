@@ -27,7 +27,7 @@ class Bottom extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <CurrentDay/>
+        <CurrentDay onPress={this.props.onPress}/>
         <View style={styles.subview}>
           <Button 
             style={styles.button} 

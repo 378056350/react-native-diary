@@ -8,7 +8,8 @@ import {
   CameraRoll,
   ListView,
   FlatList,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  TextInput
 } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
@@ -33,7 +34,7 @@ class Photo extends Component {
       photos: [],
       noMore: true,
       lastCursor: null,
-      selectCount: []
+      selectCount: [],
     };
   }
   componentDidMount() {
@@ -70,6 +71,7 @@ class Photo extends Component {
         asset.isSelect = 0;
         assetsArr.push(asset);
       }
+      console.log(assetsArr)
       this.setState({
         photos: [...this.state.photos, ...assetsArr],
         noMore: noMore,
@@ -97,6 +99,12 @@ class Photo extends Component {
     
   }
   _onItemPress=(item, isSelect)=>{
+    // 超过9张
+    if (this.state.selectCount.length > 8 && isSelect == true) {
+      this.refs.toast.show(1000)
+      return;
+    }
+    // 点击操作
     if (isSelect == true) {
       this.state.selectCount.push(item.item.row);
       this.state.photos[item.item.row].isSelect = this.state.selectCount.length;
@@ -110,10 +118,10 @@ class Photo extends Component {
         }
       }
       this.state.photos[item.item.row].isSelect = 0;
-      // this.setState({
-      //   photos: this.state.photos
-      // })
     }
+    this.setState({
+      selectCount: this.state.selectCount
+    })
   }
   _onCameraPress=()=>{
     ImagePicker.openCamera({  
@@ -121,7 +129,9 @@ class Photo extends Component {
       height: 400,  
       cropping: false  
     }).then(image => {  
-      console.log(image);  
+      // this.setState({
+      //   photos: [image, ...this.state.photos],
+      // }); 
     });
   }
 
@@ -149,6 +159,11 @@ class Photo extends Component {
       />
     )
   }
+  toast=()=>{
+    return (
+      <Toast ref={"toast"} text={"抱歉哦, 最多9张图片啦"}/>
+    )
+  }
   renderLoadingView() {
     return (
       <View style={styles.load} >
@@ -166,6 +181,7 @@ class Photo extends Component {
         <PhotoCell 
           item={item}
           onPress={this._onItemPress}
+          selectCount={this.state.selectCount.length}
         />
       )
     }
@@ -175,6 +191,7 @@ class Photo extends Component {
       <View style={styles.container}>
         {this.nav()}
         {this.table()}
+        {this.toast()}
       </View>
     );
   }

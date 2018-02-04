@@ -1,5 +1,5 @@
 // Default
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, InteractionManager } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
@@ -15,7 +15,7 @@ import Bottom from './bottom/Bottom';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
-class Home extends Component {
+class Home extends PureComponent {
 
   //==================== 系统 ====================//
   constructor(props) {
@@ -38,17 +38,6 @@ class Home extends Component {
   _onTopClick=()=>{
     this.refs.hud.show();
   }
-  // 切换卡片正反
-  _onBottomChangClick=(isDetail)=>{
-    this.refs.table.show(isDetail);
-  }
-  // 编辑日记
-  _onBottomEditClick=()=>{
-    InteractionManager.runAfterInteractions(() => {
-      const { navigate } = this.props.navigation;
-      navigate("Edit");
-    })
-  }
   // 正面
   _onPositive=(i)=>{
     InteractionManager.runAfterInteractions(() => {
@@ -57,7 +46,7 @@ class Home extends Component {
     })
   }
   // 反面
-  _onOpposite=(i)=>{
+  _onOpposite=(day, month)=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
       navigate("Diary");
@@ -73,6 +62,26 @@ class Home extends Component {
     } else {
       this.refs.table.scrollWithIndex(0)
     }
+  }
+  // 当前月点击
+  _onBottomCurrentClick=()=>{
+    this.refs.table.scrollWithIndex(DateManager.getMonth()-1);
+    setTimeout(() => {
+      this.setState({
+        currentYear: DateManager.getYear()
+      })
+    }, 1000);
+  }
+  // 编辑日记
+  _onBottomEditClick=()=>{
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      navigate("Edit");
+    })
+  }
+  // 切换卡片正反
+  _onBottomChangClick=(isDetail)=>{
+    this.refs.table.show(isDetail);
   }
 
   //==================== 控件 ====================//
@@ -105,6 +114,7 @@ class Home extends Component {
       <Bottom 
         onChange={this._onBottomChangClick}
         onEdit={this._onBottomEditClick}
+        onPress={this._onBottomCurrentClick}
       />
     )
   }

@@ -13,7 +13,7 @@ import {
   InteractionManager 
 } from 'react-native';
 // Utils
-import { DateManager } from '../../../common/index';
+import { DateManager, Button } from '../../../common/index';
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
 const DURATION = 250;
@@ -21,6 +21,15 @@ const CARD_WIDTH = ScreenWidth - 90;
 const CARD_HEIGHT = CARD_WIDTH / 5 * 8;
 
 class Positive extends PureComponent {
+
+  //==================== 系统 ====================//
+  constructor(props) {
+    super(props);
+    this.state = {
+      // 选择年份
+      pointerEvents: 'auto'
+    }
+  }
 
   //=================== 设置 ===================//
   display(that) {
@@ -30,6 +39,9 @@ class Positive extends PureComponent {
       },
       onPress: that.props.onPositive
     });
+    this.setState({
+      pointerEvents: 'auto'
+    })
   }
   hidden() {
     this.refs.positive.setNativeProps({
@@ -38,13 +50,20 @@ class Positive extends PureComponent {
       },
       onPress: undefined
     });
+    this.setState({
+      pointerEvents: 'none'
+    })
   }
 
+  //=================== 点击 ===================//
+  _onColor=()=>{
+    console.log("asdasd")
+  }
 
   //=================== 控件 ===================//
   render() {
     return (
-      <View ref={"positive"} style={styles.positive}>
+      <View ref={"positive"} pointerEvents={this.state.pointerEvents} style={styles.positive}>
         <View style={styles.calender}>
           <Text style={styles.month}>{this.props.month}</Text>
           <Text style={styles.day}>{DateManager.getMonthEn(this.props.month-1)}</Text>
@@ -57,7 +76,10 @@ class Positive extends PureComponent {
               <View style={styles.noneline}/>
             </View>
           </View>
-          <Image style={styles.icon} resizeMode={"contain"} source={require('../../../assets/images/icon_option.png')}/>
+          <Button 
+            customView={<Image style={styles.icon} resizeMode={"contain"} source={require('../../../assets/images/icon_option.png')}/>}
+            onPress={this._onColor}
+          />
         </View>
       </View>
     )

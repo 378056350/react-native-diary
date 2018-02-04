@@ -41,9 +41,12 @@ class Card extends PureComponent {
     if (this.state.isPositive == true) {
       this.props.onPositive();
     } else {
-      this.props.onOpposite();
+      // this.props.onOpposite();
     }
   } 
+  _onCalenderPress=(day, month)=>{
+    this.props.onOpposite(day, month);
+  }
 
   //==================== 动画 ====================//
   show(SHOW) {
@@ -69,12 +72,6 @@ class Card extends PureComponent {
         duration: DURATION,
         easing: Easing.linear
       }).start((result)=>{
-        // this.refs.positive.setNativeProps({
-        //   style: {
-        //     opacity: 0,
-        //   },
-        //   onPress: undefined
-        // });
         this.refs.positive.hidden();
         this.showOpposite();
       });
@@ -151,8 +148,10 @@ class Card extends PureComponent {
   opposite() {
     return (
       <Opposite 
+        ref={"opposite"}
         month={this.props.month}
         currentYear={this.props.currentYear}
+        onCalenderPress={this._onCalenderPress}
       />
     )
   }

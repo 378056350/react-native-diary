@@ -54,12 +54,15 @@ class KKInputHUD extends PureComponent {
       
     });
   }
-  hide() {
+  hide(block) {
     Animated.timing(this.state.opacity,{ 
       duration: 300,
       easing: Easing.elastic(0),
       toValue: 0
     }).start((result)=>{
+      if (block) {
+        block();
+      }
       this.setState({
         modalVisible: false,
       })
@@ -99,18 +102,16 @@ class KKInputHUD extends PureComponent {
   //==================== 点击 ====================//
   _onCellClick=(item)=>{
     if (this.props.type == HUD.DATE) {
-      this.setState({
-        currentIndex: item.key
+      this.hide(()=>{
+        this.state.currentIndex = item.key;
+        this.props.onPress(item);
       });
-      this.hide();
-      this.props.onPress(item);
     } 
     else if (this.props.type == HUD.WEATHER) {
-      this.setState({
-        currentIndex: item.key
+      this.hide(()=>{
+        this.state.currentIndex = item.key;
+        this.props.onPress(item);
       });
-      this.hide();
-      this.props.onPress(item);
     }
   }
 

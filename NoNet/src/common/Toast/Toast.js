@@ -26,10 +26,13 @@ class Toast extends Component {
       modalVisible: false,
     }
   }
-  show() {
+  show(time) {
     this.setState({
       modalVisible: true
     })
+    setTimeout(() => {
+      this.hide()
+    }, time);
   }
   hide(callBack) {
     this.setState({

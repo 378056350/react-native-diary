@@ -20,10 +20,12 @@ class CurrentDay extends PureComponent {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.top}>Today</Text>
-        <Text style={styles.bottom}>{this.text()}</Text>
-      </View>
+      <TouchableOpacity activeOpacity={1} onPress={this.props.onPress}>
+        <View style={styles.container}>
+          <Text style={styles.top}>Today</Text>
+          <Text style={styles.bottom}>{this.text()}</Text>
+        </View>
+      </TouchableOpacity>
     );
   }
 }
