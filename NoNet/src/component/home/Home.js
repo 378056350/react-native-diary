@@ -21,6 +21,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // 选择年份
       currentYear: DateManager.getYear(),
     }
   }
@@ -67,6 +68,11 @@ class Home extends Component {
     this.setState({
       currentYear: item.year
     })
+    if (item.year == DateManager.getYear()) {
+      this.refs.table.scrollWithIndex(DateManager.getMonth() - 1)
+    } else {
+      this.refs.table.scrollWithIndex(0)
+    }
   }
 
   //==================== 控件 ====================//
@@ -90,6 +96,7 @@ class Home extends Component {
         ref={"table"}
         onPositive={this._onPositive}
         onOpposite={this._onOpposite}
+        currentYear={this.state.currentYear}
       />
     )
   }

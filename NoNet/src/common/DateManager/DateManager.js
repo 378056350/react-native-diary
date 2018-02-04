@@ -11,7 +11,23 @@ export default class DateManager {
     return arr;
   }
 
-
+  /** 获取某年某月第一天是周几 */
+  static getWeek(year, month) {
+    var d = new Date();
+    d.setYear(year);
+    d.setMonth(month-1);
+    d.setDate(1);
+    // 获得周几
+    // var weeks = ['周天','周1','周2','周3','周4','周5','周6'];
+    var weeks = [0, 1, 2, 3, 4, 5, 6];
+    return weeks[d.getDay()];
+  }
+  /** 获取某年某月有多少天 */
+  static getDaysInOneMonth(year, month){  
+    month = parseInt(month, 10);  
+    var d= new Date(year, month, 0);  
+    return d.getDate();  
+  }  
 
 
   /** 获取年 */
@@ -19,6 +35,7 @@ export default class DateManager {
     var date = new Date();
     return date.getFullYear();
   }
+  /** 获取月份英文缩写 */
   static getMonthEn(month) {
     let months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
     return months[month]

@@ -13,6 +13,7 @@ import {
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import ImagePicker from 'react-native-image-crop-picker';  
 // 控件
 import PhotoCell from './PhotoCell';
 import CameraCell from './CameraCell';
@@ -114,6 +115,15 @@ class Photo extends Component {
       // })
     }
   }
+  _onCameraPress=()=>{
+    ImagePicker.openCamera({  
+      width: 300,  
+      height: 400,  
+      cropping: false  
+    }).then(image => {  
+      console.log(image);  
+    });
+  }
 
   //==================== 控件 ====================//
   nav=()=>{
@@ -149,7 +159,7 @@ class Photo extends Component {
   _renderItem=(item)=>{
     if (item.item.photo == true) {
       return (
-        <CameraCell/>
+        <CameraCell onPress={this._onCameraPress}/>
       )
     } else {
       return (

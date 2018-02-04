@@ -144,12 +144,16 @@ class Card extends PureComponent {
       <Positive 
         ref={"positive"}
         month={this.props.month}
+        currentYear={this.props.currentYear}
       />
     )
   }
   opposite() {
     return (
-      <Opposite month={this.props.month}/>
+      <Opposite 
+        month={this.props.month}
+        currentYear={this.props.currentYear}
+      />
     )
   }
   shadow() {

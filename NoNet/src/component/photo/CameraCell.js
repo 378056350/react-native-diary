@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  DeviceEventEmitter
+  DeviceEventEmitter,
 } from 'react-native';
 import { ScreenWidth } from '../../utils/index';
  
@@ -16,13 +16,15 @@ class CameraCell extends Component {
 
   render() { 
     return (
-      <View style={styles.container}>
-        <Image 
-          source={require('../../assets/images/photo.png')}
-          resizeMode={"contain"}
-          style={styles.icon}
-        />
-      </View>
+      <TouchableOpacity activeOpacity={1} onPress={this.props.onPress}>
+        <View style={styles.container}>
+          <Image 
+            source={require('../../assets/images/photo.png')}
+            resizeMode={"contain"}
+            style={styles.icon}
+          />
+        </View>
+      </TouchableOpacity>
     )
   }
 }

@@ -15,6 +15,13 @@ class Table extends Component {
       this.refs["card"+i].show(isDetail)
     }
   }
+  scrollWithIndex(index) {
+    this.refs.scroll.scrollTo({
+      x: index * (ScreenWidth - 80), 
+      y: 0, 
+      animated: true
+    })
+  }
 
   //==================== 点击 ====================//
   _onPositive=(i)=>{
@@ -35,6 +42,7 @@ class Table extends Component {
           month={i+1}
           onPositive={()=>this._onPositive(i)} 
           onOpposite={()=>this._onOpposite(i)}
+          currentYear={this.props.currentYear}
         />
       )
     }
@@ -44,6 +52,7 @@ class Table extends Component {
     return (
       <View style={styles.contaner}>
         <ScrollView 
+          ref={"scroll"}
           style={styles.scroll}
           horizontal={true} 
           pagingEnabled={true}
