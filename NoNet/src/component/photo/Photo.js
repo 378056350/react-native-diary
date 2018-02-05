@@ -11,7 +11,9 @@ import {
   DeviceEventEmitter,
   TextInput,
   Platform,
-  LayoutAnimation
+  LayoutAnimation,
+  ScrollView,
+  Switch
 } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
@@ -25,6 +27,7 @@ import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, PhotoM
 import { dataAction } from '../../redux/action/index';
 import { StreamColor } from '../../utils/index';
 import ImgToBase64 from 'react-native-image-base64';
+import { ScreenWidth } from '../../utils/index';
 var ReadImageData = require('NativeModules').ReadImageData;
 var CustomLayoutAnimation = {
   duration: 200,
@@ -42,6 +45,15 @@ var CustomLayoutAnimation = {
   }
 };
 
+// ImgToBase64.getBase64String(assetsArr[0].node.image.uri).then(base64String => {
+//   console.log("base64: " + base64String);
+// }).catch(err => {
+//   console.log("err: " + base64String);
+// });
+// ReadImageData.readImage(assetsArr[0].node.image.uri, (imageBase64) => this._turnBase64);
+
+
+var that;
 class Photo extends Component {
 
   //==================== 系统 ====================//
@@ -49,13 +61,18 @@ class Photo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // 是否在读取
       loaded: false,
-      photos: [],
+      // 是否没有更多数据
       noMore: true,
+      // 读取相册的标识
       lastCursor: null,
-      // [0, 1, 2]
-      selectCount: [],
-      photoCount: []
+      // 相册数据
+      photoAsset: [],
+      // 拍照数据
+      cameraAsset: [],
+      // 选中图片
+      assets: [],
     };
     if (Platform.OS === 'android') {
         UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -63,20 +80,11 @@ class Photo extends Component {
   }
   componentDidMount() {
     this.state.loaded = true;
+    that = this;
     PhotoManager.fetchData(5, this.state.lastCursor, this._appendAssets);
   }
   componentDidUpdate() {
     LayoutAnimation.configureNext(CustomLayoutAnimation);
-  }
-  // 请求更多图片
-  _onLoadMore=()=>{
-    if (this.state.loaded == true) {
-      return;
-    }
-    if(!this.state.noMore) {
-      this.state.loaded = true;
-      PhotoManager.fetchData(5, this.state.lastCursor, this._appendAssets);
-    }
   }
 
   //==================== 点击 ====================//
@@ -88,36 +96,51 @@ class Photo extends Component {
   // 保存
   _save=()=>{
     const {goBack, state} = this.props.navigation;
-    state.params.callback(this.state.photoCount);
+    state.params.callback(this.state.photoAsset);
     goBack();
   }
   // 选中照片
   _onItemPress=(item, isSelect)=>{
     // 超过9张
-    if (this.state.selectCount.length > 8 && isSelect == true) {
-      this.refs.toast.show(1000)
-      return;
+    if (this.state.assets.length >= 9 && isSelect == false) {
+      this.refs.toast.show(1000);
     }
-    // 点击操作
-    if (isSelect == true) {
-      this.state.selectCount.push(item.item.row);
-      this.state.photoCount.push(item.item.node.image.uri);
-      this.state.photos[item.item.row].isSelect = this.state.selectCount.length;
-      DeviceEventEmitter.emit('Cell'+item.item.row, '通知来了');
-    } else {
-      this.state.selectCount.pop();
-      this.state.photoCount.pop();
-      for (let i=0; i<this.state.photos.length; i++) {
-        if (this.state.photos[i].isSelect > this.state.photos[item.item.row].isSelect) {
-          this.state.photos[i].isSelect -= 1;
-          DeviceEventEmitter.emit('Cell'+i, '通知来了');
-        }
+    // 少于9张
+    else {
+      // 添加到拍照
+      if (item.section == 1) {
+        let arr = this.state.cameraAsset;
+        arr[item.item.row].isSelect = !isSelect;
+        this.setState({
+          cameraAsset: arr
+        })
+      } 
+      // 添加到相册
+      else {
+        let arr  = this.state.photoAsset;
+        arr[item.item.row].isSelect = !isSelect;
+        this.setState({
+          photoAsset: arr
+        })
       }
-      this.state.photos[item.item.row].isSelect = 0;
+      // 当前是添加
+      if (isSelect == false) {
+        this.state.assets.push(item);
+      }
+      // 当前是删除
+      else {
+        let arr = [];
+        for (let i=0; i<this.state.assets.length; i++) {
+          if (!PhotoCell.equalData(this.state.assets[i], item)) {
+            arr.push(this.state.assets[i]);
+          }
+        }
+        this.setState({
+          assets: arr
+        })
+      }
+      DeviceEventEmitter.emit('Cell'+item.item.section+""+item.item.row, '通知来了');
     }
-    this.setState({
-      selectCount: this.state.selectCount
-    })
   }
   // 拍照
   _onCameraPress=()=>{
@@ -129,45 +152,42 @@ class Photo extends Component {
       compressImageQuality: 0.5
     }).then(image => {
       let newIcon = {node: {image: {uri: "data:image/" + image.mime + ";base64," + image.data}}};
-      this._onRefreshIcon([newIcon, ...this.state.photos]);
+      newIcon.isSelect = 0;
+      newIcon.section = 1;
+
+      let assetsArr = [newIcon, ...this.state.cameraAsset];
+      let arr = [];
+      for (let i=0; i<assetsArr.length; i++) {
+        let asset = assetsArr[i];
+        asset.key = i + this.state.assets.length;
+        asset.row = i + this.state.assets.length;
+        asset.section = 2;
+        arr.push(asset);
+      }
+      this.setState({
+        cameraAsset: arr
+      })
     });
   }
-  // 相册获取图片
+  // 相册
   _appendAssets=(data, noMore)=>{
     var assets = data.edges;
     if (assets.length > 0) {
       let assetsArr = [];
       for (let i=0; i<assets.length; i++) {
         let asset = assets[i];
-        asset.key = i + this.state.photos.length;
-        asset.row = i + this.state.photos.length;
+        asset.key = i + this.state.assets.length;
+        asset.row = i + this.state.assets.length;
+        asset.section = 2;
         asset.isSelect = 0;
         assetsArr.push(asset);
       }
-      // console.log(assetsArr)
-      // if (assetsArr.length == 5) {
-      //   console.log("进来了")
-      //   console.log(assetsArr[0].node.image.uri);
-      //   // ImgToBase64.getBase64String(assetsArr[0].node.image.uri).then(base64String => {
-      //   //   console.log("base64: " + base64String);
-      //   // }).catch(err => {
-      //   //   console.log("err: " + base64String);
-      //   // });
-      //   // ReadImageData.readImage(assetsArr[0].node.image.uri, (imageBase64) => this._turnBase64);
-      // }
-
-      // this.setState({
-      //   photos: [...this.state.photos, ...assetsArr],
-      //   noMore: noMore,
-      //   lastCursor: data.page_info.end_cursor,
-      //   loaded: false
-      // })
-      this._onRefreshIcon(
-        [...this.state.photos, ...assetsArr],
-        noMore,
-        false,
-        data.page_info.end_cursor,
-      )
+      this.setState({
+        photoAsset: [...this.state.photoAsset, ...assetsArr],
+        noMore: noMore,
+        loaded: false,
+        lastCursor: data.page_info.end_cursor,
+      })
     } 
     else {
       this.setState({
@@ -175,28 +195,24 @@ class Photo extends Component {
       })
     }
   }
-  // 刷新图片
-  _onRefreshIcon=(data, hasMore, hasLoad, hasLastCursor)=>{
-    let arr = [];
-    let _hasMore = hasMore == null ? this.state.noMore : hasMore;
-    let _hasLoad = hasLoad == null ? this.state.loaded : hasLoad;
-    let _hasLastCursor = hasLastCursor == null ? this.state.hasLastCursor : hasLastCursor;
-    for (let i=0; i<data.length; i++) {
-      let asset = data[i];
-      asset.key = i;
-      asset.row = i;
-      asset.isSelect = asset.isSelect == null ? false : asset.isSelect
-      arr.push(asset);
+  // 滚动到底部
+  _contentViewScroll(event){
+    var offsetY = event.nativeEvent.contentOffset.y; //滑动距离
+    var contentSizeHeight = event.nativeEvent.contentSize.height; //scrollView contentSize高度
+    var oriageScrollHeight = event.nativeEvent.layoutMeasurement.height; //scrollView高度
+    if (offsetY + oriageScrollHeight >= contentSizeHeight){
+      if (that.state.loaded == true) {
+        return;
+      }
+      if(!that.state.noMore) {
+        that.state.loaded = true;
+        PhotoManager.fetchData(5, that.state.lastCursor, that._appendAssets);
+      }
     }
-    this.setState({
-      photos: arr,
-      noMore: _hasMore,
-      loaded: _hasLoad,
-      lastCursor: _hasLastCursor
-    })
   }
 
   //==================== 控件 ====================//
+  // 导航
   nav=()=>{
     return (
       <Navigation 
@@ -208,50 +224,68 @@ class Photo extends Component {
       />
     )
   }
-  table=()=>{
+  // 拍照
+  camera=()=>{
     return (
-      <FlatList
-        style={{flex: 1}}
-        numColumns={3}
-        data={[{photo: true, key: 0}, ...this.state.photos]}
-        columnWrapperStyle={styles.row}
-        renderItem={this._renderItem}
-        onEndReached={this._onLoadMore}
-      />
+      <CameraCell onPress={this._onCameraPress}/>
     )
   }
+  // 拍照
+  cameraView() {
+    let arr = [];
+    for (let i=0; i<this.state.cameraAsset.length; i++) {
+      arr.push(
+        <PhotoCell 
+          key={10000+i}
+          item={{item: this.state.cameraAsset[i]}}
+          onPress={this._onItemPress}
+          assets={this.state.assets}
+        />
+      )
+    }
+    return arr;
+  }
+  // 相册
+  photoView() {
+    let arr = [];
+    for (let i=0; i<this.state.photoAsset.length; i++) {
+      arr.push(
+        <PhotoCell 
+          key={i}
+          item={{item: this.state.photoAsset[i]}}
+          onPress={this._onItemPress}
+          assets={this.state.assets}
+        />
+      )
+    }
+    return arr;
+  }
+  // 提示
   toast=()=>{
     return (
       <Toast ref={"toast"} text={"抱歉哦, 最多9张图片啦"}/>
     )
   }
-  renderLoadingView() {
+  // 滚动视图
+  scroll=()=>{
     return (
-      <View style={styles.load} >
-        <Text>Loading image......</Text>
-      </View>
-    );
-  }
-  _renderItem=(item)=>{
-    if (item.item.photo == true) {
-      return (
-        <CameraCell onPress={this._onCameraPress}/>
-      )
-    } else {
-      return (
-        <PhotoCell 
-          item={item}
-          onPress={this._onItemPress}
-          selectCount={this.state.selectCount.length}
-        />
-      )
-    }
+      <ScrollView 
+        style={styles.scroll}
+        onMomentumScrollEnd = {this._contentViewScroll}
+      >
+        <View style={styles.subview}>
+          {this.camera()}
+          {this.cameraView()}
+          {this.photoView()}
+        </View>
+      </ScrollView>
+    )
   }
   render() { 
     return (
       <View style={styles.container}>
         {this.nav()}
-        {this.table()}
+        {this.scroll()}
         {this.toast()}
       </View>
     );
@@ -271,6 +305,14 @@ const styles = StyleSheet.create({
    },
    load: {
     flex: 1,
+   },
+   scroll: {
+    flex: 1
+   },
+   subview: {
+    flexDirection: 'row',
+    width: ScreenWidth + 15,
+    flexWrap: 'wrap',
    }
 });
 

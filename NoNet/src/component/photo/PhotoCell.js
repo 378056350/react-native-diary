@@ -14,17 +14,23 @@ import { ScreenWidth } from '../../utils/index';
  
 class PhotoCell extends PureComponent {
 
+  static equalData(data1, data2) {
+    if (data1.item.node.image.uri == data2.item.node.image.uri) {
+      return true;
+    }
+    return false;
+  }
+
   //==================== 系统 ====================//
   constructor(props) {
     super(props);
     this.state = {
-      borderWidth: 0,
       name: 0,
-      scaleValue: new Animated.Value(0)
+      scaleValue: new Animated.Value(0),
     };
   }
   componentDidMount() {
-    this.subscription = DeviceEventEmitter.addListener('Cell'+this.props.item.item.row, (userName) =>{
+    this.subscription = DeviceEventEmitter.addListener('Cell'+this.props.item.item.section+""+this.props.item.item.row, (userName) =>{
       this.text();
     })
   }
@@ -34,17 +40,15 @@ class PhotoCell extends PureComponent {
   
   //==================== 点击 ====================//
   _onPress=()=>{
-    // 最多9张
-    if (this.props.selectCount > 8 && this.state.borderWidth == 0) {
-      this.props.onPress(this.props.item, true);
-      return;
+    // 超过9张
+    if (this.props.assets.length > 8) {
+      this.props.onPress(this.props.item, this.props.item.item.isSelect);
     }
-    // 显示
-    this.show();
-    this.props.onPress(this.props.item, this.state.borderWidth == 0 ? true : false);
-    this.setState({
-      borderWidth: this.state.borderWidth == 0 ? 3 : 0
-    })
+    // 
+    else {
+      this.show();
+      this.props.onPress(this.props.item, this.props.item.item.isSelect);
+    }
   }
   
   //==================== 动画 ====================//
@@ -65,8 +69,16 @@ class PhotoCell extends PureComponent {
       str = this.props.item.item.isSelect;
     }
     this.setState({
-      name: str
+      name: str,
     })
+  }
+  name() {
+    for (let i=0; i<this.props.assets.length; i++) {
+      if (PhotoCell.equalData(this.props.assets[i], this.props.item)) {
+        return i;
+      }
+    }
+    return ""
   }
 
   //==================== 控件 ====================//
@@ -80,7 +92,7 @@ class PhotoCell extends PureComponent {
       <Animated.View 
         ref={"cell"}
         style={[styles.container, {
-          borderWidth: this.state.borderWidth,
+          borderWidth: this.props.item.item.isSelect == true ? 3 : 0,
           transform: [{
             scale: this.state.scaleValue.interpolate({
               inputRange: [0, 1, 2],
@@ -90,12 +102,12 @@ class PhotoCell extends PureComponent {
         }]}
       >
         <Image 
-          style={[styles.icon, {borderRadius: this.state.borderWidth}]} 
+          style={[styles.icon, {borderRadius: this.props.item.item.isSelect == true ? 3 : 0}]} 
           source={{uri: this.props.item.item.node.image.uri, scale: 1}}
           onLoad={this._onLoad}
         />
-        <View style={[styles.number, {opacity: this.state.borderWidth == 3 ? 1 : 0}]}>
-          <Text style={styles.name}>{this.state.name}</Text>
+        <View style={[styles.number, {opacity: this.props.item.item.isSelect == true ? 1 : 0}]}>
+          <Text style={styles.name}>{this.name()}</Text>
         </View>
       </Animated.View>
     )
@@ -115,6 +127,9 @@ const styles = StyleSheet.create({
     width: (ScreenWidth - 20) / 3,
     height: (ScreenWidth - 20) / 3,
     borderColor: '#87CEFA',
+    marginRight: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   icon: {
     flex: 1,

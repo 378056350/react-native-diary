@@ -37,6 +37,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(233,233,233,1)',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 5,
+    marginRight: 10,
   },
   icon: {
     width: (ScreenWidth - 20) / 3 / 3,
