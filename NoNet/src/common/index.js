@@ -14,6 +14,7 @@ import DateManager from './DateManager/DateManager';
 import Swipe from './Swipe/Swipe';
 import Calender from './Calender/Calender';
 import RealmManager from './RealmManager/RealmManager';
+import PhotoManager from './PhotoManager/PhotoManager';
 
 export {
   Line,
@@ -31,5 +32,6 @@ export {
   DateManager,
   Swipe,
   Calender,
-  RealmManager
+  RealmManager,
+  PhotoManager
 }

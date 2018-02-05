@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 import {
   AppRegistry,
   StyleSheet,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { ScreenWidth } from '../../utils/index';
  
-class PhotoCell extends Component {
+class PhotoCell extends PureComponent {
 
   //==================== 系统 ====================//
   constructor(props) {
@@ -71,13 +71,14 @@ class PhotoCell extends Component {
 
   //==================== 控件 ====================//
   _onLoad=()=>{
-    return (
-      <Text>123123</Text>
-    )
+    this.refs.cell.setNativeProps({
+      backgroundColor: '#87CEFA',
+    })
   }
   content() {
     return (
       <Animated.View 
+        ref={"cell"}
         style={[styles.container, {
           borderWidth: this.state.borderWidth,
           transform: [{
@@ -90,7 +91,7 @@ class PhotoCell extends Component {
       >
         <Image 
           style={[styles.icon, {borderRadius: this.state.borderWidth}]} 
-          source={{uri: this.props.item.item.node.image.uri}}
+          source={{uri: this.props.item.item.node.image.uri, scale: 1}}
           onLoad={this._onLoad}
         />
         <View style={[styles.number, {opacity: this.state.borderWidth == 3 ? 1 : 0}]}>
@@ -114,7 +115,6 @@ const styles = StyleSheet.create({
     width: (ScreenWidth - 20) / 3,
     height: (ScreenWidth - 20) / 3,
     borderColor: '#87CEFA',
-    backgroundColor: '#87CEFA',
   },
   icon: {
     flex: 1,

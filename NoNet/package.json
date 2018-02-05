@@ -11,6 +11,8 @@
     "prop-types": "^15.6.0",
     "react": "16.0.0",
     "react-native": "0.51.0",
+    "react-native-asset-library-to-base64": "^1.1.0",
+    "react-native-image-base64": "^0.1.2",
     "react-native-image-crop-picker": "^0.19.1",
     "react-native-picker": "^4.3.2",
     "react-native-storage": "^0.2.2",

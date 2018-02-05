@@ -9,7 +9,9 @@ import {
   ListView,
   FlatList,
   DeviceEventEmitter,
-  TextInput
+  TextInput,
+  Platform,
+  LayoutAnimation
 } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
@@ -18,10 +20,27 @@ import ImagePicker from 'react-native-image-crop-picker';
 // 控件
 import PhotoCell from './PhotoCell';
 import CameraCell from './CameraCell';
-import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast, AutoExpandingTextInput } from '../../common/index';
+import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, PhotoManager, Toast, AutoExpandingTextInput } from '../../common/index';
 // action
 import { dataAction } from '../../redux/action/index';
 import { StreamColor } from '../../utils/index';
+import ImgToBase64 from 'react-native-image-base64';
+var ReadImageData = require('NativeModules').ReadImageData;
+var CustomLayoutAnimation = {
+  duration: 200,
+    create: {
+    type: LayoutAnimation.Types.linear,
+    property: LayoutAnimation.Properties.opacity,
+  },
+  update: {
+    type: LayoutAnimation.Types.easeInEaseOut,
+    property: LayoutAnimation.Properties.opacity,
+  },
+  delete: {
+    type: LayoutAnimation.Types.linear,
+    property: LayoutAnimation.Properties.opacity,
+  }
+};
 
 class Photo extends Component {
 
@@ -38,70 +57,41 @@ class Photo extends Component {
       selectCount: [],
       photoCount: []
     };
+    if (Platform.OS === 'android') {
+        UIManager.setLayoutAnimationEnabledExperimental(true)
+    }
   }
   componentDidMount() {
-    this.fetchData();
-  }
-  fetchData() {
     this.state.loaded = true;
-    // 定义如何从cameraRoll中取数据
-    var fetchParams = {
-      first: 5, // 每次取六张
-      groupTypes: 'All',
-      assetType: 'Photos'
-    }
-    // 如果不是第一次取图片，则this.state.lastCursor不为空，下一次取图片时就从上次的结尾开始取
-    if (this.state.lastCursor) {
-      fetchParams.after = this.state.lastCursor;
-    }
-    CameraRoll.getPhotos(fetchParams).then((data) => {
-      this._appendAssets(data); // 取到图片数据后，交由appendAssets处理
-    }).done();
+    PhotoManager.fetchData(5, this.state.lastCursor, this._appendAssets);
   }
-  _appendAssets=(data)=>{ 
-    var assets = data.edges;
-    var noMore = false;
-    if (!data.page_info.has_next_page) { 
-      noMore = true;
-    }
-    if (assets.length > 0) {
-      let assetsArr = [];
-      for (let i=0; i<assets.length; i++) {
-        let asset = assets[i];
-        asset.key = i + this.state.photos.length;
-        asset.row = i + this.state.photos.length;
-        asset.isSelect = 0;
-        assetsArr.push(asset);
-      }
-      console.log(assetsArr)
-      this.setState({
-        photos: [...this.state.photos, ...assetsArr],
-        noMore: noMore,
-        lastCursor: data.page_info.end_cursor,
-        loaded: false
-      })
-    }
-    this.state.loaded = false;
+  componentDidUpdate() {
+    LayoutAnimation.configureNext(CustomLayoutAnimation);
   }
+  // 请求更多图片
   _onLoadMore=()=>{
     if (this.state.loaded == true) {
       return;
     }
     if(!this.state.noMore) {
-      this.fetchData();
+      this.state.loaded = true;
+      PhotoManager.fetchData(5, this.state.lastCursor, this._appendAssets);
     }
   }
 
   //==================== 点击 ====================//
+  // 返回
   _back=()=>{
-    const {goBack} = this.props.navigation;
+    const { goBack } = this.props.navigation;
     goBack();
   }
+  // 保存
   _save=()=>{
     const {goBack, state} = this.props.navigation;
     state.params.callback(this.state.photoCount);
     goBack();
   }
+  // 选中照片
   _onItemPress=(item, isSelect)=>{
     // 超过9张
     if (this.state.selectCount.length > 8 && isSelect == true) {
@@ -129,16 +119,81 @@ class Photo extends Component {
       selectCount: this.state.selectCount
     })
   }
+  // 拍照
   _onCameraPress=()=>{
     ImagePicker.openCamera({  
       width: 300,  
       height: 400,  
-      cropping: false  
-    }).then(image => {  
-      // this.setState({
-      //   photos: [image, ...this.state.photos],
-      // }); 
+      cropping: false,
+      includeBase64: true,
+      compressImageQuality: 0.5
+    }).then(image => {
+      let newIcon = {node: {image: {uri: "data:image/" + image.mime + ";base64," + image.data}}};
+      this._onRefreshIcon([newIcon, ...this.state.photos]);
     });
+  }
+  // 相册获取图片
+  _appendAssets=(data, noMore)=>{
+    var assets = data.edges;
+    if (assets.length > 0) {
+      let assetsArr = [];
+      for (let i=0; i<assets.length; i++) {
+        let asset = assets[i];
+        asset.key = i + this.state.photos.length;
+        asset.row = i + this.state.photos.length;
+        asset.isSelect = 0;
+        assetsArr.push(asset);
+      }
+      // console.log(assetsArr)
+      // if (assetsArr.length == 5) {
+      //   console.log("进来了")
+      //   console.log(assetsArr[0].node.image.uri);
+      //   // ImgToBase64.getBase64String(assetsArr[0].node.image.uri).then(base64String => {
+      //   //   console.log("base64: " + base64String);
+      //   // }).catch(err => {
+      //   //   console.log("err: " + base64String);
+      //   // });
+      //   // ReadImageData.readImage(assetsArr[0].node.image.uri, (imageBase64) => this._turnBase64);
+      // }
+
+      // this.setState({
+      //   photos: [...this.state.photos, ...assetsArr],
+      //   noMore: noMore,
+      //   lastCursor: data.page_info.end_cursor,
+      //   loaded: false
+      // })
+      this._onRefreshIcon(
+        [...this.state.photos, ...assetsArr],
+        noMore,
+        false,
+        data.page_info.end_cursor,
+      )
+    } 
+    else {
+      this.setState({
+        loaded: false
+      })
+    }
+  }
+  // 刷新图片
+  _onRefreshIcon=(data, hasMore, hasLoad, hasLastCursor)=>{
+    let arr = [];
+    let _hasMore = hasMore == null ? this.state.noMore : hasMore;
+    let _hasLoad = hasLoad == null ? this.state.loaded : hasLoad;
+    let _hasLastCursor = hasLastCursor == null ? this.state.hasLastCursor : hasLastCursor;
+    for (let i=0; i<data.length; i++) {
+      let asset = data[i];
+      asset.key = i;
+      asset.row = i;
+      asset.isSelect = asset.isSelect == null ? false : asset.isSelect
+      arr.push(asset);
+    }
+    this.setState({
+      photos: arr,
+      noMore: _hasMore,
+      loaded: _hasLoad,
+      lastCursor: _hasLastCursor
+    })
   }
 
   //==================== 控件 ====================//
