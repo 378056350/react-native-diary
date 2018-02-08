@@ -57,19 +57,19 @@ class Swipe extends Component {
   }
   swiperIcon() {
     let arr = [];
-    if (this.props.photos.length == 0) {
+    if (this.props.assets.length == 0) {
       for (let i=0; i<2; i++) {
         arr.push (
           <View key={i} style={styles.slide}/>
         )
       }
     } else {
-      for (let i=0; i<this.props.photos.length; i++) {
+      for (let i=0; i<this.props.assets.length; i++) {
         arr.push (
           <Image 
             key={i} 
             style={styles.slide} 
-            source={{'uri': this.props.photos[i]}}
+            source={{'uri': this.props.assets[i].item.node.image.uri, scale: 1}}
           />
         )
       }
@@ -116,7 +116,7 @@ class Swipe extends Component {
             pointerEvents={"box-none"}
           >
           {this.add()}
-          {this.props.photos.length != 0 ? this.remove() : null}
+          {this.props.assets.length != 0 ? this.remove() : null}
           </View>
         </Animated.View>
       </Animated.View>
@@ -154,10 +154,10 @@ const styles = StyleSheet.create({
 });
 
 Swipe.defaultProps = {
-  photos: []
+  assets: []
 }
 Swipe.propTypes = {
-  photos: PropTypes.array.isRequired,
+  assets: PropTypes.array.isRequired,
 }
 
 export default Swipe;

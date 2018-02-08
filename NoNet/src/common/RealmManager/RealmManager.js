@@ -1,5 +1,4 @@
 
-import StorageManager from './StorageManager';
 var Realm = require('realm');
 var realm;
 // 连接组件 
@@ -9,7 +8,6 @@ export default class RealmManager {
   // 初始化数据
   static initialization() {
     RealmManager.initializationRealm();
-    StorageManager.initialization();
   }
   static initializationRealm() {
     let schemas = [];
@@ -19,7 +17,9 @@ export default class RealmManager {
       properties: {
         id:      'int',
         name:    {type: 'string', default: ''},
-        time:    {type: 'string', default: ''},
+        year:    {type: 'string', default: ''},
+        month:   {type: 'string', default: ''},
+        day:     {type: 'string', default: ''},
         photos:  'string[]',
         content: {type: 'string', default: ''},
         weather: {type: 'string', default: 'sunny'},
@@ -30,26 +30,62 @@ export default class RealmManager {
 
 
   //==================== 日记 ====================//
-  // 写日记
-  static saveDiary(id, name, content, weather, time, photos) {
+  // 增日记
+  static saveDiary(name, content, year, month, day, weather, photos) {
+    RealmManager.loadMaxId((maxid)=>{
+      realm.write(() => {
+        realm.create('Diary', {
+          id: maxid, 
+          name: name, 
+          weather: weather,
+          photos: photos,
+          content: content,
+          year: year,
+          month: month,
+          day: day,
+        });
+      })
+      RealmManager.saveMaxId(maxid + 1);
+    })
+  }
+  // 查日记
+  static loadDiary(filtered) {
+    if (realm != undefined) {
+      let persons = realm.objects('Diary');
+      if (filtered != null) {
+        persons = persons.filtered(filtered);
+      }
+      return persons;
+    } else {
+      return [];
+    }
+  }
+  // 改日记
+  static replaceDiary(id, name, content, year, month, day, time, photos) {
     realm.write(() => {
       realm.create('Diary', {
         id: id, 
         name: name, 
-        time: time,
+        weather: weather,
         photos: photos,
         content: content,
-        weather: weather,
-      });
+        year: year,
+        month: month,
+        day: day,
+      }, true);
     })
   }
-  // 获取日记
-  static loadDiary(filtered) {
-    let persons = realm.objects('Diary');
-    if (filtered != null) {
-      persons = persons.filtered(filtered);
-    }
-    return persons;
+  // 删日记
+  static removeDiary(filtered) {
+    realm.write(() => {
+      // 获取Person对象
+      let persons = realm.objects('Diary');
+      if (filtered != null) {
+        persons = persons.filtered(filtered);
+      }
+      // 删除
+      realm.delete(persons);
+    })
   }
 
 
@@ -62,14 +98,18 @@ export default class RealmManager {
       }
     },(err)=>{
       if (block) {
-          block(0);
+          block(1);
       }
     });
   }
   // 获取最大ID
-  static saveMaxId() {
-    RealmManager.loadMaxId((id)=>{
-      StorageManager.saveWithKey('MAXID', id+1, null); 
-    });
+  static saveMaxId(id) {
+    if (id != null) {
+      StorageManager.saveWithKey('MAXID', id, null); 
+    } else {
+      RealmManager.loadMaxId((id)=>{
+        StorageManager.saveWithKey('MAXID', id+1, null); 
+      });
+    }
   }
 };

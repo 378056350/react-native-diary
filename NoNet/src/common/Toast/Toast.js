@@ -20,17 +20,23 @@ import { TitleColor } from '../../utils/UIUtils';
 
 class Toast extends Component {
 
+  //==================== 系统 ====================//
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
     }
   }
+  componentWillUnmount() {
+    this.timer && clearTimeout(this.timer);
+  }
+  
+  //==================== 动画 ====================//
   show(time) {
     this.setState({
       modalVisible: true
     })
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.hide()
     }, time);
   }
@@ -39,12 +45,16 @@ class Toast extends Component {
       modalVisible: false
     })
   }
+
+  //==================== 点击 ====================//
   _onPress=()=>{
     this.props.onPress()
     if (this.props.isAllowHide == true) {
       this.hide()
     }
   }
+  
+  //==================== 控件 ====================//
   hud() {
     return (
       <View style={styles.hud}>

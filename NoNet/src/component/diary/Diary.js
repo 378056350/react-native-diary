@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, Animated, Sc
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action
-import { dataAction } from '../../redux/action/index';
+import { diaryAction } from '../../redux/action/index';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast, Swipe, KKInputHUD } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
@@ -39,31 +39,10 @@ class Diary extends PureComponent {
             outputRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,0)', 'rgba(255,255,255,1)']
           })
         }]}
-        leftText={'返回'}
+        leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
       />
     )
-  }
-  diary() {
-    let arr = [];
-    for (let i=0; i<2; i++) {
-      arr.push(
-        <View key={i} style={{width: ScreenWidth, height: ScreenHeight}}>  
-          {this.content()}
-          {this.swipe()}
-        </View>
-      )
-    }
-    return (
-      <ScrollView 
-        horizontal={true}
-        pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        style={{width: ScreenWidth, height: ScreenHeight}}
-      >
-        {arr}
-      </ScrollView>
-    );
   }
   swipe() {
     return (
@@ -90,6 +69,7 @@ class Diary extends PureComponent {
             })
           }]
         }}
+        assets={[]}
         addPress={this._onAddPress}
         removePress={this._onRemovePress}
       />
@@ -118,7 +98,8 @@ class Diary extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        {this.diary()}
+        {this.content()}
+        {this.swipe()}
         {this.nav()}
       </View>
     );
@@ -190,11 +171,11 @@ const styles = StyleSheet.create({
 
 // reducer
 const mapStateToProps = state => ({
-  DataReducer: state.DataReducer,
+  DiaryReducer: state.DiaryReducer,
 });
 // action
 const mapDispatchToProps = dispatch => ({
-  DataAction: bindActionCreators(dataAction, dispatch),
+  DiaryAction: bindActionCreators(diaryAction, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Diary);

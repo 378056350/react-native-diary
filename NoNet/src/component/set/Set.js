@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Text, View, Image, ScrollView, TouchableOpacity }
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action
-import { dataAction } from '../../redux/action/index';
+import { diaryAction } from '../../redux/action/index';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
 // Utils
@@ -111,11 +111,11 @@ const styles = StyleSheet.create({
 
 // reducer
 const mapStateToProps = state => ({
-  DataReducer: state.DataReducer,
+  DiaryReducer: state.DiaryReducer,
 });
 // action
 const mapDispatchToProps = dispatch => ({
-  DataAction: bindActionCreators(dataAction, dispatch),
+  DiaryAction: bindActionCreators(diaryAction, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Set);

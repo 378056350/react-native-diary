@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, InteractionM
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action
-import { dataAction } from '../../redux/action/index';
+import { diaryAction } from '../../redux/action/index';
 // Common
 import { Navigation, ThirdPicker, DateManager, RealmManager, Toast, KKInputHUD, HUD } from '../../common/index';
 // 控件
@@ -27,13 +27,32 @@ class Home extends PureComponent {
     }
   }
   componentDidMount() {
-    RealmManager.initialization();
-    // RealmManager.saveDiary(1, '标题1', '内容1', '天气1', '时间1', []);
-    // RealmManager.saveDiary(2, '标题2', '内容2', '天气2', '时间2', []);
-    // RealmManager.saveDiary(3, '标题3', '内容3', '天气3', '时间3', []);
-    // RealmManager.saveDiary(4, '标题4', '内容4', '天气4', '时间4', []);
-    // RealmManager.saveDiary(5, '标题5', '内容5', '天气5', '时间5', []);
-    console.log(RealmManager.loadDiary('id < 3').length)
+    const { DiaryAction } = this.props;
+    // 初始化
+    DiaryAction.initializationSaga();
+    // 增
+    // DiaryAction.saveDiarySaga({
+    //   name: '标题1', 
+    //   content: '内容1', 
+    //   weather: '天气1', 
+    //   year: '2018',
+    //   month: '2',
+    //   day: '12', 
+    //   photos: []
+    // });
+    // 查
+    DiaryAction.loadDiarySaga();
+    // 改
+    // DiaryAction.replaceDiarySaga({
+    //   id: 1,
+    //   name: '标题1', 
+    //   content: '内容1', 
+    //   weather: '天气22', 
+    //   time: '时间1', 
+    //   photos: []
+    // });
+    // 删
+    // DiaryAction.removeDiarySaga('id == 1')
   }
 
   //==================== 点击 ====================//
@@ -86,12 +105,15 @@ class Home extends PureComponent {
   // 编辑日记
   _onBottomEditClick=()=>{
     InteractionManager.runAfterInteractions(() => {
-      let week = DateManager.getWeekday()[1];
-      let month = DateManager.getMonthEnglish();
-      let day = DateManager.getDay();
       let year = DateManager.getYear();
+      let month = DateManager.getMonth();
+      let day = DateManager.getDay();
       const { navigate } = this.props.navigation;
-      navigate("Edit", {"name": week + '. ' + month + " " + day + "/" + year});
+      navigate("Edit", {
+        "year": year,
+        "month": month,
+        "day": day
+      });
     })
   }
   // 切换卡片正反
@@ -120,12 +142,14 @@ class Home extends PureComponent {
     )
   }
   table() {
+    const { DiaryReducer } = this.props;
     return (
       <Table 
         ref={"table"}
         onPositive={this._onPositive}
         onOpposite={this._onOpposite}
         currentYear={this.state.currentYear}
+        diarys={DiaryReducer.diarys}
       />
     )
   }
@@ -172,11 +196,11 @@ const styles = StyleSheet.create({
 
 // reducer
 const mapStateToProps = state => ({
-  DataReducer: state.DataReducer,
+  DiaryReducer: state.DiaryReducer,
 });
 // action
 const mapDispatchToProps = dispatch => ({
-  DataAction: bindActionCreators(dataAction, dispatch),
+  DiaryAction: bindActionCreators(diaryAction, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

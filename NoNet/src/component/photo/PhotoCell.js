@@ -75,7 +75,7 @@ class PhotoCell extends PureComponent {
   name() {
     for (let i=0; i<this.props.assets.length; i++) {
       if (PhotoCell.equalData(this.props.assets[i], this.props.item)) {
-        return i;
+        return i+1;
       }
     }
     return ""

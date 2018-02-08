@@ -13,7 +13,7 @@ import {
   InteractionManager 
 } from 'react-native';
 // Utils
-import { DateManager, Button } from '../../../common/index';
+import { DateManager, Button, DiaryManager } from '../../../common/index';
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
 const DURATION = 250;
@@ -62,6 +62,8 @@ class Positive extends PureComponent {
 
   //=================== 控件 ===================//
   render() {
+    let month = DateManager.getDaysInOneMonth(this.props.currentYear, this.props.month);
+    let diarys = DiaryManager.getDiary(this.props.currentYear, this.props.month);
     return (
       <View ref={"positive"} pointerEvents={this.state.pointerEvents} style={styles.positive}>
         <View style={styles.calender}>
@@ -70,10 +72,14 @@ class Positive extends PureComponent {
         </View>
         <View style={styles.bottom}>
           <View style={styles.bottomLeft}>
-            <Text style={styles.diarys}>0/31</Text>
+            <Text style={styles.diarys}>0/{month}</Text>
             <View style={styles.lines}>
-              <View style={styles.line}/>
-              <View style={styles.noneline}/>
+              <View style={[styles.line, {
+                flex: 0
+              }]}/>
+              <View style={[styles.noneline, {
+                flex: month
+              }]}/>
             </View>
           </View>
           <Button 
@@ -137,13 +143,11 @@ const styles = StyleSheet.create({
     height: 3,
     backgroundColor: 'white',
     borderRadius: 1,
-    flex: 3,
   },
   noneline: {
     height: 3,
     backgroundColor: 'transparent',
     borderRadius: 1,
-    flex: 27,
   },
   icon: {
     width: 20,

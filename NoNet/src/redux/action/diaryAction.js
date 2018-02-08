@@ -1,14 +1,42 @@
 
 let actions = {
-    // 初始化分类数据
-    initializationDataSaga: ()=>({
-        type: "initializationDataSaga",
+    // 初始化数据
+    initializationSaga: ()=>({
+        type: "initializationSaga",
     }),
-    // 记账
-    saveAccountSaga: (data)=>({
-        type: "saveAccountSaga",
-        data: data,
+    // 增
+    saveDiarySaga: (data)=>({
+        type: "saveDiarySaga",
+        data: data
     }),
+    // 查
+    loadDiarySaga: (filtered)=>({
+        type: "loadDiarySaga",
+        filtered: filtered
+    }),
+    // 改
+    replaceDiarySaga: (data)=>({
+        type: "replaceDiarySaga",
+        data: data
+    }),
+    // 删
+    removeDiarySaga: (filtered)=>({
+        type: "removeDiarySaga",
+        filtered: filtered
+    }),
+
+
+
+
+    // // 初始化分类数据
+    // initializationDataSaga: ()=>({
+    //     type: "initializationDataSaga",
+    // }),
+    // // 记账
+    // saveAccountSaga: (data)=>({
+    //     type: "saveAccountSaga",
+    //     data: data,
+    // }),
 
 }
 

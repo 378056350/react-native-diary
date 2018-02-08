@@ -2,14 +2,20 @@ import { takeEvery } from 'redux-saga'
 import { call, put } from 'redux-saga/effects'
 
 import { 
-  saveAccountSagas,
-  initializationDataSagas,
+  initializationSagas,
+  saveDiarySagas,
+  loadDiarySagas,
+  replaceDiarySagas,
+  removeDiarySagas
 } from './dataSagas';
 
 function* saga() {
   yield [
-    call(saveAccountSagas),
-    call(initializationDataSagas),
+    call(initializationSagas),
+    call(saveDiarySagas),
+    call(loadDiarySagas),
+    call(replaceDiarySagas),
+    call(removeDiarySagas),
   ]
 }
 

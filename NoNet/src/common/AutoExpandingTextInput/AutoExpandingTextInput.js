@@ -20,6 +20,9 @@ class AutoExpandingTextInput extends Component {
     });
     this.props.onContentSizeChange();
   }
+  getContent() {
+    return this.state.text
+  }
 
   // 是否在编辑
   isFocused() {
@@ -57,6 +60,7 @@ class AutoExpandingTextInput extends Component {
         underlineColorAndroid="transparent"
         style={[style, { height: textHeight }]}
         value={this.state.text}
+        onChangeText={(text) => this.setState({text})}
       />
     );
   }

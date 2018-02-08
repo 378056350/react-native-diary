@@ -1,6 +1,6 @@
 
-import dataAction from './dataAction';
+import diaryAction from './diaryAction';
 
 export {
-    dataAction
+    diaryAction
 }

@@ -24,7 +24,7 @@ import PhotoCell from './PhotoCell';
 import CameraCell from './CameraCell';
 import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, PhotoManager, Toast, AutoExpandingTextInput } from '../../common/index';
 // action
-import { dataAction } from '../../redux/action/index';
+import { diaryAction } from '../../redux/action/index';
 import { StreamColor } from '../../utils/index';
 import ImgToBase64 from 'react-native-image-base64';
 import { ScreenWidth } from '../../utils/index';
@@ -44,14 +44,6 @@ var CustomLayoutAnimation = {
     property: LayoutAnimation.Properties.opacity,
   }
 };
-
-// ImgToBase64.getBase64String(assetsArr[0].node.image.uri).then(base64String => {
-//   console.log("base64: " + base64String);
-// }).catch(err => {
-//   console.log("err: " + base64String);
-// });
-// ReadImageData.readImage(assetsArr[0].node.image.uri, (imageBase64) => this._turnBase64);
-
 
 var that;
 class Photo extends Component {
@@ -86,6 +78,26 @@ class Photo extends Component {
   componentDidUpdate() {
     LayoutAnimation.configureNext(CustomLayoutAnimation);
   }
+  turnBase64Icons(i, arr, block) {
+    // 图片转完
+    if (i >= this.state.assets.length) {
+      block(arr)
+    } 
+    // 图片没有转完
+    else {
+      let asset = this.state.assets[i];
+      // 不是base64
+      if (asset.length >= 50) {
+        ReadImageData.readImage(this.state.assets[i].item.node.image.uri, "0.1", (imageBase64) => {
+          this.turnBase64Icons(i + 1, [...arr, imageBase64], block);
+        });
+      } 
+      // 是base64
+      else {
+        this.turnBase64Icons(i + 1, [...arr, asset], block);
+      }
+    }
+  }
 
   //==================== 点击 ====================//
   // 返回
@@ -95,12 +107,16 @@ class Photo extends Component {
   }
   // 保存
   _save=()=>{
-    const {goBack, state} = this.props.navigation;
-    state.params.callback(this.state.photoAsset);
-    goBack();
+    this.refs.toast.show(1000);
+    let arr = this.turnBase64Icons(0, [], (arr)=>{
+      const {goBack, state} = this.props.navigation;
+      state.params.callback(arr);
+      goBack();
+    });
   }
   // 选中照片
   _onItemPress=(item, isSelect)=>{
+    item.item.isBase64 = false;
     // 超过9张
     if (this.state.assets.length >= 9 && isSelect == false) {
       this.refs.toast.show(1000);
@@ -154,7 +170,6 @@ class Photo extends Component {
       let newIcon = {node: {image: {uri: "data:image/" + image.mime + ";base64," + image.data}}};
       newIcon.isSelect = 0;
       newIcon.section = 1;
-
       let assetsArr = [newIcon, ...this.state.cameraAsset];
       let arr = [];
       for (let i=0; i<assetsArr.length; i++) {
@@ -162,6 +177,7 @@ class Photo extends Component {
         asset.key = i + this.state.assets.length;
         asset.row = i + this.state.assets.length;
         asset.section = 2;
+        asset.isBase64 = true;
         arr.push(asset);
       }
       this.setState({
@@ -318,11 +334,11 @@ const styles = StyleSheet.create({
 
 // reducer
 const mapStateToProps = state => ({
-  DataReducer: state.DataReducer,
+  DiaryReducer: state.DiaryReducer,
 });
 // action
 const mapDispatchToProps = dispatch => ({
-  DataAction: bindActionCreators(dataAction, dispatch),
+  DiaryAction: bindActionCreators(diaryAction, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Photo);

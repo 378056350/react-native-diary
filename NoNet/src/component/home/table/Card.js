@@ -145,6 +145,7 @@ class Card extends PureComponent {
         ref={"positive"}
         month={this.props.month}
         currentYear={this.props.currentYear}
+        diarys={this.props.diarys}
       />
     )
   }

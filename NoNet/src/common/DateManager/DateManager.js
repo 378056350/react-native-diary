@@ -71,4 +71,13 @@ export default class DateManager {
     var d = new Date(y, m, d).getDay();
     return [l1[d],l2[d]];
   }
+
+
+  /** 获取天气字符串 */
+  static getDateStr(year, month, day) {
+    let week = DateManager.getWeekday(year, month, day)[1];
+    let month1 = DateManager.getMonthEnglish(month);
+    return week + '. ' + month1 + " " + day + "/" + year;
+  }
+
 };

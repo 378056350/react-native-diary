@@ -20,9 +20,9 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action
-import { dataAction } from '../../redux/action/index';
+import { diaryAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast, AutoExpandingTextInput } from '../../common/index';
+import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast, AutoExpandingTextInput, DateManager } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor, TitleColor } from '../../utils/index';
@@ -53,7 +53,8 @@ class Edit extends Component {
       currentWeatherIndex: 0,
       keyboardH: 0,
       titleEditable: true,
-      photos: []
+      assets: [],
+      name: ''
     };  
   }  
   componentWillMount () {
@@ -109,6 +110,17 @@ class Edit extends Component {
   }
   // 保存
   _save=()=>{
+    const { params } = this.props.navigation.state;
+    const { DiaryAction } = this.props;
+    DiaryAction.saveDiarySaga({
+      name: this.state.name, 
+      content: this.refs.content.getContent(), 
+      weather: this.state.currentWeatherIndex, 
+      photos: this.state.assets,
+      year: params.year,
+      month: params.month,
+      day: params.day,
+    })
     
   } 
   // 手指按下Scroll
@@ -174,7 +186,7 @@ class Edit extends Component {
       const { navigate } = this.props.navigation;
       navigate("Photo", {callback: (data)=>{
         this.setState({
-          photos: data
+          assets: data
         })
       }});
     })
@@ -182,10 +194,10 @@ class Edit extends Component {
   // 删除图片
   _onRemovePress=(i)=>{
     InteractionManager.runAfterInteractions(() => {
-      let arr = this.state.photos;
+      let arr = this.state.assets;
       arr.splice(i, 1)
       this.setState({
-        photos: arr
+        assets: arr
       })
     })
   }
@@ -230,12 +242,13 @@ class Edit extends Component {
         }}
         addPress={this._onAddPress}
         removePress={this._onRemovePress}
-        photos={this.state.photos}
+        assets={this.state.assets}
       />
     )
   }
   content() {
     const { params } = this.props.navigation.state;
+    let date = DateManager.getDateStr(params.year, params.month, params.day);
     return (
       <ScrollView 
         scrollEventThrottle={10}
@@ -251,8 +264,18 @@ class Edit extends Component {
         )}
       >
         <View style={styles.subcontent}>
-          <Text style={styles.date}>{params.name}</Text>
-          <TextInput style={styles.name} editable={this.state.titleEditable} ref={"title"} onFocus={this._onTitleFocus} autoCorrect={false} placeholder={"标题"} onLayout={this._onTitleLayout}/>
+          <Text style={styles.date}>{date}</Text>
+          <TextInput 
+            style={styles.name} 
+            editable={this.state.titleEditable} 
+            ref={"title"} 
+            onFocus={this._onTitleFocus} 
+            autoCorrect={false} 
+            placeholder={"标题"} 
+            onChangeText={(name) => this.setState({name})}
+            value={this.state.name}
+            onLayout={this._onTitleLayout}
+          />
           <TouchableOpacity activeOpacity={1} style={styles.weather} onPress={this._onWeather}>
             <Image style={{flex: 1, width: 25}} resizeMode={"contain"} source={this.state.icon[this.state.currentWeatherIndex]}/>
           </TouchableOpacity>
@@ -382,11 +405,11 @@ const styles = StyleSheet.create({
 
 // reducer
 const mapStateToProps = state => ({
-  DataReducer: state.DataReducer,
+  DiaryReducer: state.DiaryReducer,
 });
 // action
 const mapDispatchToProps = dispatch => ({
-  DataAction: bindActionCreators(dataAction, dispatch),
+  DiaryAction: bindActionCreators(diaryAction, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Edit);
