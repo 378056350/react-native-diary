@@ -10,7 +10,8 @@ class AutoExpandingTextInput extends Component {
     this.state = {
       text: '',
       height: 0,
-      editable: true
+      editable: true,
+      default: ''
     };
   }
   onContentSizeChange(event) {
@@ -22,6 +23,11 @@ class AutoExpandingTextInput extends Component {
   }
   getContent() {
     return this.state.text
+  }
+  setText(text) {
+    this.setState({
+      default: text
+    })
   }
 
   // 是否在编辑
@@ -54,6 +60,7 @@ class AutoExpandingTextInput extends Component {
       <TextInput
         {...this.props}
         editable={this.state.editable}
+        defaultValue={this.state.default}
         ref={"content"}
         multiline={true}
         onContentSizeChange={(event)=>this.onContentSizeChange(event)}

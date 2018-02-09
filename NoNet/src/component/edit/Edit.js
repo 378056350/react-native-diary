@@ -1,5 +1,6 @@
 // Default
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { 
   Platform, 
   StyleSheet, 
@@ -66,8 +67,10 @@ class Edit extends Component {
   componentDidMount() {
     const { params } = this.props.navigation.state;
     this.setState({
-      currentWeatherIndex: params.weather
+      currentWeatherIndex: params.weather ? params.weather : 0,
+      name: params.name,
     });
+    this.refs.content.setText(params.content)
   }
   componentWillUnmount () {
     this.keyboardWillShowListener.remove();
@@ -117,16 +120,21 @@ class Edit extends Component {
   // 保存
   _save=()=>{
     const { params } = this.props.navigation.state;
+    const { goBack } = this.props.navigation;
     const { DiaryAction } = this.props;
     DiaryAction.saveDiarySaga({
       name: this.state.name, 
       content: this.refs.content.getContent(), 
-      weather: this.state.currentWeatherIndex, 
+      weather: this.state.currentWeatherIndex + "", 
       photos: this.state.assets,
-      year: params.year,
-      month: params.month,
-      day: params.day,
+      year: params.year+"",
+      month: params.month+"",
+      day: params.day+"",
     })
+    setTimeout(() => {
+      goBack();
+      DiaryAction.loadDiarySaga();
+    }, 1000);
   } 
   // 手指按下Scroll
   _onScrollStart=()=>{
@@ -407,6 +415,13 @@ const styles = StyleSheet.create({
     top: 0,
   }
 });
+
+Edit.defaultProps = {
+  assets: []
+}
+Edit.propTypes = {
+  assets: PropTypes.array,
+}
 
 // reducer
 const mapStateToProps = state => ({

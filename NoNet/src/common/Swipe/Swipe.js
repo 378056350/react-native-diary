@@ -69,7 +69,7 @@ class Swipe extends Component {
           <Image 
             key={i} 
             style={styles.slide} 
-            source={{'uri': this.props.assets[i].item.node.image.uri, scale: 1}}
+            source={{'uri': this.props.assets[i], scale: 1}}
           />
         )
       }

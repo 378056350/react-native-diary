@@ -20,8 +20,11 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: [{key: '1'}, {key: '2'}, {key: '3'}, {key: '4'}, {key: '5'}]
+      dataSource: []
     }
+  }
+  componentDidMount() {
+    this.data();
   }
 
   //==================== 删除 ====================//
@@ -35,7 +38,11 @@ class List extends Component {
 		const newData = [...this.state.dataSource];
 		const prevIndex = this.state.dataSource.findIndex(item => item.key === rowKey);
     newData.splice(prevIndex, 1);
-		this.setState({dataSource: newData});
+    this.setState({dataSource: newData});
+    
+    const { DiaryAction } = this.props;
+    let diary = this.state.dataSource[rowKey];
+    DiaryAction.removeDiarySaga("year == '" + diary.year + "' && month == '" + diary.month + "' && day == '" + diary.day + "'");
 	}
 
   //==================== 点击 ====================//
@@ -61,7 +68,9 @@ class List extends Component {
       year: item.year,
       month: item.month,
       day: item.day,
-      weather: item.weather
+      weather: item.weather,
+      name: item.name,
+      content: item.content,
     });
   }
 
@@ -83,7 +92,9 @@ class List extends Component {
       diary.key = i;
       arr.push(diary);
     }
-    return arr;
+    this.setState({
+      dataSource: arr
+    })
   }
   nav() {
     const { params } = this.props.navigation.state;
@@ -99,7 +110,7 @@ class List extends Component {
     return (
       <SwipeListView
         useFlatList
-        data={this.data()}
+        data={this.state.dataSource}
         ListEmptyComponent={this._ListEmptyComponent}
         renderItem={(data, rowMap) => this._renderItem(data)}
         renderHiddenItem={(data, rowMap) => (

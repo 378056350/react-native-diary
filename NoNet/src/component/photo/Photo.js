@@ -87,9 +87,10 @@ class Photo extends Component {
     else {
       let asset = this.state.assets[i];
       // 不是base64
-      if (asset.length >= 50) {
-        ReadImageData.readImage(this.state.assets[i].item.node.image.uri, "0.1", (imageBase64) => {
-          this.turnBase64Icons(i + 1, [...arr, imageBase64], block);
+      if (asset.item.node.image.uri.indexOf("assets-library") != -1) {
+        ReadImageData.readImage(asset.item.node.image.uri, "0.1", (imageBase64) => {
+          let str = "data:image/jpeg;base64," + imageBase64;
+          this.turnBase64Icons(i + 1, [...arr, str], block);
         });
       } 
       // 是base64
@@ -111,6 +112,7 @@ class Photo extends Component {
     let arr = this.turnBase64Icons(0, [], (arr)=>{
       const {goBack, state} = this.props.navigation;
       state.params.callback(arr);
+      console.log(arr);
       goBack();
     });
   }

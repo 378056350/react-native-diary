@@ -10,6 +10,7 @@ import {
   Animated, 
   ScrollView,
   ActionSheetIOS,
+  Alert,
 } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
@@ -46,17 +47,35 @@ class Diary extends PureComponent {
   showActionSheet() {
     ActionSheetIOS.showActionSheetWithOptions({
       options: [
-        'Option 0',
-        'Option 1',
-        'Option 2',
-        'Destruct',
-        'Cancel',
+        '编辑',
+        '删除',
+        '取消',
       ],
-      cancelButtonIndex: 4,
-      destructiveButtonIndex: 3,
+      cancelButtonIndex: 2,
+      destructiveButtonIndex: 1,
     },(buttonIndex) => {
-      // this.setState({ clicked: BUTTONS[buttonIndex] });
+      if (buttonIndex == 0) {
+        this.clickOne()
+      } else if (buttonIndex == 1) {
+        this.clickTwo()
+      }
     });
+  }
+  clickOne() {
+  }
+  clickTwo() {
+    Alert.alert(
+      '你确定要删除这篇日记吗?',
+      '你不能撤销这个操作',
+      [
+        {text: '删除', onPress: this.removeDiary, style: 'cancel'},
+        {text: '取消', onPress: () => {}},
+      ],
+      { cancelable: false }
+    )
+  }
+  removeDiary=()=>{
+
   }
 
   //==================== 控件 ====================//
@@ -71,7 +90,7 @@ class Diary extends PureComponent {
         }]}
         leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
-        rightText={"存储"}
+        rightIcon={require('../../assets/images/icon_option_gray.png')}
         rightClick={this._save}
       />
     )

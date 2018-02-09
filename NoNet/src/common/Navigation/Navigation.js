@@ -113,10 +113,14 @@ class Navigation extends Component {
           onPress={this.rightClick}
         >
           <Text style={styles.rightText}>{this.props.rightText}</Text>
-          <Image source={this.props.rightIcon} style={[styles.rightIcon,{
-            opacity: this.props.rightIcon == undefined ? 0 : 1,
-            width: this.props.rightIcon ? 20 : 0,
-          },this.props.rightStyle]}/>
+          <Image 
+            source={this.props.rightIcon} 
+            resizeMode={"contain"}
+            style={[styles.rightIcon,{
+              opacity: this.props.rightIcon == undefined ? 0 : 1,
+              width: this.props.rightIcon ? 20 : 0,
+            },this.props.rightStyle]}
+          />
         </TouchableOpacity>
       </Animated.View>
     );

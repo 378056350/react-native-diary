@@ -26,16 +26,16 @@ class Home extends PureComponent {
       isDetail: false
     }
   }
-  // componentWillUpdate = (nextProps, nextState) => {
-  //   console.log("更改属性");
-  //   let condition1 = nextState.currentYear != this.state.currentYear;
-  //   let condition2 = nextState.isDetail != this.state.isDetail;
-  //   let condition3 = nextProps.DataReducer != this.props.DataReducer;
-  //   if (condition1 || condition2 || condition3) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  componentWillUpdate = (nextProps, nextState) => {
+    console.log("更改属性");
+    let condition1 = nextState.currentYear != this.state.currentYear;
+    let condition2 = nextState.isDetail != this.state.isDetail;
+    let condition3 = nextProps.DataReducer != this.props.DataReducer;
+    if (condition1 || condition2 || condition3) {
+      return true;
+    }
+    return true;
+  }
   
   
   
@@ -87,16 +87,33 @@ class Home extends PureComponent {
       navigate("List", {
         name: DateManager.getMonthEnglish(i)+"/"+this.state.currentYear,
         year: this.state.currentYear,
-        month: i+1
+        month: i+1,
+        day: DateManager.getDay(),
       });
     })
   }
   // 反面
   _onOpposite=(day, month)=>{
-    InteractionManager.runAfterInteractions(() => {
-      const { navigate } = this.props.navigation;
-      navigate("Diary");
-    })
+    const { DiaryReducer } = this.props;
+    let diarys = DiaryReducer.dateDiarys;
+    let year = this.state.currentYear;
+    if (diarys[year] != null && 
+        diarys[year][month] != null && 
+        diarys[year][month][day] != null) {
+      InteractionManager.runAfterInteractions(() => {
+        const { navigate } = this.props.navigation;
+        navigate("Diary");
+      })
+    } else {
+      InteractionManager.runAfterInteractions(() => {
+        const { navigate } = this.props.navigation;
+        navigate("Edit", {
+          "year": year,
+          "month": month,
+          "day": day
+        });
+      })
+    }
   }
   // hud选择
   _onHudClick=(item)=>{
@@ -171,6 +188,7 @@ class Home extends PureComponent {
     )
   }
   bottom() {
+    const { DiaryReducer } = this.props;
     return (
       <Bottom 
         isDetail={this.state.isDetail}
@@ -180,6 +198,8 @@ class Home extends PureComponent {
         onEdit={this._onBottomEditClick}
         // 点击今日
         onPress={this._onBottomCurrentClick}
+        // 数据
+        diarys={DiaryReducer.dateDiarys}
       />
     )
   }

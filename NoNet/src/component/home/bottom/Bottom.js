@@ -2,7 +2,7 @@
 import React, { Component, PureComponent } from 'react';
 import { Platform, StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
 // Utils
-import { Button } from '../../../common/index';
+import { Button, DateManager } from '../../../common/index';
 import CurrentDay from './CurrentDay';
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
@@ -25,6 +25,32 @@ class Bottom extends PureComponent {
   }
   _edit=()=>{
     this.props.onEdit();
+  }
+
+  edit=()=>{
+    let diarys = this.props.diarys;
+    let year = DateManager.getYear();
+    let month = DateManager.getMonth();
+    let day = DateManager.getDay();
+    if (diarys[year] != null && 
+        diarys[year][month] != null &&
+        diarys[year][month][day] != null) {
+      
+    } else {
+      return (
+        <Button 
+          style={styles.button} 
+          onPress={this._edit} 
+          customView={
+            <Image 
+              style={styles.icon} 
+              resizeMode={"contain"}
+              source={require('../../../assets/images/icon_pencil.png')}
+            />
+          }
+        />
+      )
+    }
   }
   calender=()=>{
     return (
@@ -49,17 +75,7 @@ class Bottom extends PureComponent {
       <View style={styles.container}>
         <CurrentDay onPress={this.props.onPress}/>
         <View style={styles.subview}>
-          <Button 
-            style={styles.button} 
-            onPress={this._edit} 
-            customView={
-              <Image 
-                style={styles.icon} 
-                resizeMode={"contain"}
-                source={require('../../../assets/images/icon_pencil.png')}
-              />
-            }
-          />
+          {this.edit()}
           {this.calender()}
         </View>
       </View>
