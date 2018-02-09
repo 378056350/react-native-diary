@@ -1,3 +1,4 @@
+import StorageManager from './StorageManager';
 
 var Realm = require('realm');
 var realm;
@@ -7,7 +8,9 @@ export default class RealmManager {
   //==================== 初始化 ====================//
   // 初始化数据
   static initialization() {
+    console.log("开始初始化")
     RealmManager.initializationRealm();
+    StorageManager.initialization();
   }
   static initializationRealm() {
     let schemas = [];
@@ -53,7 +56,8 @@ export default class RealmManager {
     if (realm != undefined) {
       let persons = realm.objects('Diary');
       if (filtered != null) {
-        persons = persons.filtered(filtered);
+        let person = persons.filtered(filtered);
+        console.log("AAA")
       }
       return persons;
     } else {

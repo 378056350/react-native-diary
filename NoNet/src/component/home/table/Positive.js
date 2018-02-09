@@ -63,7 +63,13 @@ class Positive extends PureComponent {
   //=================== 控件 ===================//
   render() {
     let month = DateManager.getDaysInOneMonth(this.props.currentYear, this.props.month);
-    let diarys = DiaryManager.getDiary(this.props.currentYear, this.props.month);
+    let diary = 0;
+    if (this.props.diarys[this.props.currentYear] != null) {
+      if (this.props.diarys[this.props.currentYear][this.props.month] != null) {
+        diary = this.props.diarys[this.props.currentYear][this.props.month]["array"].length;
+      }
+    }
+    
     return (
       <View ref={"positive"} pointerEvents={this.state.pointerEvents} style={styles.positive}>
         <View style={styles.calender}>
@@ -72,10 +78,10 @@ class Positive extends PureComponent {
         </View>
         <View style={styles.bottom}>
           <View style={styles.bottomLeft}>
-            <Text style={styles.diarys}>0/{month}</Text>
+            <Text style={styles.diarys}>{diary}/{month}</Text>
             <View style={styles.lines}>
               <View style={[styles.line, {
-                flex: 0
+                flex: diary
               }]}/>
               <View style={[styles.noneline, {
                 flex: month

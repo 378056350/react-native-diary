@@ -14,7 +14,7 @@ import {
   TextInput, 
   ScrollView, 
   TouchableOpacity,
-  Alert
+  Alert,
 } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
@@ -62,6 +62,12 @@ class Edit extends Component {
     this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this._keyboardWillShow);
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this._keyboardWillHide);
+  }
+  componentDidMount() {
+    const { params } = this.props.navigation.state;
+    this.setState({
+      currentWeatherIndex: params.weather
+    });
   }
   componentWillUnmount () {
     this.keyboardWillShowListener.remove();
@@ -121,7 +127,6 @@ class Edit extends Component {
       month: params.month,
       day: params.day,
     })
-    
   } 
   // 手指按下Scroll
   _onScrollStart=()=>{

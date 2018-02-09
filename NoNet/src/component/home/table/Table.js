@@ -60,7 +60,7 @@ class Table extends Component {
           onPositive={()=>this._onPositive(i)} 
           onOpposite={this._onOpposite}
           currentYear={this.props.currentYear}
-          // diarys={this.props.diarys}
+          diarys={this.props.diarys}
         />
       )
     }

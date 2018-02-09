@@ -22,10 +22,39 @@ function* saveDiarySaga(ret) {
 }
 // 查
 function* loadDiarySaga(ret) {
+    // 所有日记
     let diarys = yield call(loadDiary, ret.filtered);
+    // 按日期整理日记
+    let arr = {};
+    for (let i=0; i<diarys.length; i++) {
+        let diary = diarys[i];
+        if (arr[diary.year] == null) {
+            arr[diary.year] = {};
+        }
+        if (arr[diary.year]["array"] == null) {
+            arr[diary.year]["array"] = [];
+        }
+        if (arr[diary.year][diary.month] == null) {
+            arr[diary.year][diary.month] = {};
+        }
+        if (arr[diary.year][diary.month]["array"] == null) {
+            arr[diary.year][diary.month]["array"] = [];
+        }
+        if (arr[diary.year][diary.month][diary.day] == null) {
+            arr[diary.year][diary.month][diary.day] = [];
+        }
+        if (arr[diary.year][diary.month][diary.day]["array"] == null) {
+            arr[diary.year][diary.month][diary.day]["array"] = [];
+        }
+        arr[diary.year]["array"].push(diary);
+        arr[diary.year][diary.month]["array"].push(diary);
+        arr[diary.year][diary.month][diary.day]["array"].push(diary);
+        arr[diary.year][diary.month][diary.day].push(diary)
+    }
     yield put({
         type: 'loadDiaryAction', 
-        data: diarys,
+        diarys: diarys,
+        dateDiarys: arr
     });
 }
 // 改

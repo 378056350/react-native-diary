@@ -4,6 +4,7 @@ import { Save } from '../../common/index';
 
 const initialState = {  
     diarys: [],
+    dateDiarys: [],
 }  
 
 const reducer = (state = initialState, action) => {
@@ -11,7 +12,8 @@ const reducer = (state = initialState, action) => {
         case 'loadDiaryAction': {
             state = Immutable.fromJS(state);   // 转成immutable
             state = state.merge({
-                diarys: action.data
+                diarys: action.diarys,
+                dateDiarys: action.dateDiarys
             });
             return state.toJS()    // 转回原生js
         }   

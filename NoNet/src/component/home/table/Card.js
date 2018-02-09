@@ -156,6 +156,7 @@ class Card extends PureComponent {
         month={this.props.month}
         currentYear={this.props.currentYear}
         onCalenderPress={this._onCalenderPress}
+        diarys={this.props.diarys}
       />
     )
   }

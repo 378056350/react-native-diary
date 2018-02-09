@@ -23,7 +23,7 @@ class YearCell extends PureComponent {
           <Text style={[styles.text, this.props.item.isSelect == true && {
             color: 'black'
           }]}>
-            {this.props.item.year}
+            {this.props.item.year}({this.props.count})
           </Text>
         </View>
       </TouchableHighlight>

@@ -52,18 +52,45 @@ class List extends Component {
   }
   _renderItem=(data, rowMap)=>{
     return (
-      <Cell item={data.item}/>
+      <Cell item={data.item} onPress={()=>this._onPress(data.item)}/>
     )
+  }
+  _onPress=(item)=>{
+    const { navigate } = this.props.navigation;
+    navigate("Edit", {
+      year: item.year,
+      month: item.month,
+      day: item.day,
+      weather: item.weather
+    });
   }
 
   //==================== 控件 ====================//
+  data() {
+    const { params } = this.props.navigation.state;
+    const { DiaryReducer } = this.props;
+    let arr = [];
+    let count = 0;
+    let year  = params.year;
+    let month = params.month;
+    if (DiaryReducer.dateDiarys[year] != null) {
+      if (DiaryReducer.dateDiarys[year][month] != null) {
+        count = DiaryReducer.dateDiarys[year][month]["array"].length;
+      }
+    }
+    for (let i=0; i<count; i++) {
+      let diary = DiaryReducer.dateDiarys[year][month]["array"][i];
+      diary.key = i;
+      arr.push(diary);
+    }
+    return arr;
+  }
   nav() {
     const { params } = this.props.navigation.state;
     return (
       <Navigation 
         leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
-        // text={"JAUNARY/2018"}
         text={params.name}
       />
     )
@@ -72,7 +99,7 @@ class List extends Component {
     return (
       <SwipeListView
         useFlatList
-        data={this.state.dataSource}
+        data={this.data()}
         ListEmptyComponent={this._ListEmptyComponent}
         renderItem={(data, rowMap) => this._renderItem(data)}
         renderHiddenItem={(data, rowMap) => (

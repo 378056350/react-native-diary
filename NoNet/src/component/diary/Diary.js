@@ -1,6 +1,16 @@
 // Default
 import React, { PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, Animated, ScrollView } from 'react-native';
+import { 
+  Platform, 
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  TouchableOpacity, 
+  Animated, 
+  ScrollView,
+  ActionSheetIOS,
+} from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -28,6 +38,26 @@ class Diary extends PureComponent {
     const { goBack } = this.props.navigation;
     goBack();
   }
+  _save=()=>{
+    this.showActionSheet();
+  }
+
+
+  showActionSheet() {
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: [
+        'Option 0',
+        'Option 1',
+        'Option 2',
+        'Destruct',
+        'Cancel',
+      ],
+      cancelButtonIndex: 4,
+      destructiveButtonIndex: 3,
+    },(buttonIndex) => {
+      // this.setState({ clicked: BUTTONS[buttonIndex] });
+    });
+  }
 
   //==================== 控件 ====================//
   nav() {
@@ -41,6 +71,8 @@ class Diary extends PureComponent {
         }]}
         leftIcon={require('../../assets/images/icon_back_arrow.png')}
         leftClick={this._back}
+        rightText={"存储"}
+        rightClick={this._save}
       />
     )
   }

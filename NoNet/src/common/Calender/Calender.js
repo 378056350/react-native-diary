@@ -30,13 +30,27 @@ class Calender extends PureComponent {
       let week = i+startDay-1;
       // 是否是今天
       let isToday = year == DateManager.getYear() && month == DateManager.getMonth() && i == DateManager.getDay()
-      if (week % 7 == 0) {
-        color = 'pink'
-      } else if (week % 7 == 6) {
-        color = '#87CEFA'
+      if (this.props.diarys != undefined && 
+          this.props.diarys[year] != undefined && 
+          this.props.diarys[year][month] != undefined && i >= 0 && 
+          this.props.diarys[year][month][i] != undefined) {
+        if (week % 7 == 0) {
+          color = 'rgba(255,105,180,1)'
+        } else if (week % 7 == 6) {
+          color = 'rgba(30,144,255,1)'
+        } else {
+          color = 'rgba(0,0,0,0.7)'
+        }
       } else {
-        color = 'rgba(0,0,0,0.3)'
+        if (week % 7 == 0) {
+          color = 'rgba(255,192,203,1)'
+        } else if (week % 7 == 6) {
+          color = 'rgba(135,206,250,1)'
+        } else {
+          color = 'rgba(0,0,0,0.3)'
+        }
       }
+      
       arr.push (
         this.DayComponent(i, month, color, isToday)
       )

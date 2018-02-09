@@ -5,18 +5,21 @@ import RealmManager from '../RealmManager/RealmManager';
 export default class DiaryManager {
 
   // 获取年份
-  static getDiary(year, month, day) {
-    let str = "";
-    if (year != null) {
-      str = str + "year == " + year;
+  static getDiary(diarys, year, month, day) {
+    let arr = [];
+    if (diarys) {
+      for (let i=0; i<diarys.length; i++) {
+        if (year != null && diary[i].year == year) {
+          if (month != null && diary[i].month == month) {
+            if (day != null && diary[i].day == day) {
+              arr.push(diarys[i])
+            }
+          }
+        }
+      }
+      return arr;
+    } else {
+      return [];
     }
-    if (month != null) {
-      str = str + "&& month == " + month;
-    }
-    if (day != null) {
-      str = str + "&& day == " + day;
-    }
-    let arr = RealmManager.loadDiary(str);
-    return arr;
   }
 };

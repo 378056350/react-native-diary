@@ -41,6 +41,10 @@ class KKInputHUD extends PureComponent {
     }
   }
 
+  setCurrentIndex(index) {
+    this.state.currentIndex = index;
+  }
+
   //==================== 动画 ====================//
   show() {
     this.setState({
@@ -167,9 +171,16 @@ class KKInputHUD extends PureComponent {
   }
   _renderItem=(item)=>{
     if (this.props.type == HUD.DATE) {
+      let count = this.props.diarys[item.year];
+      if (count != null) {
+        count = count["array"].length;
+      } else {
+        count = 0;
+      }
       return (
         <YearCell 
           item={item}
+          count={count}
           onPress={this._onCellClick}
         />
       )

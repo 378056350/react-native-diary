@@ -8,6 +8,19 @@ import { ScreenWidth, ScreenHeight, StreamColor, LineColor, TitleColor } from '.
 
 class Cell extends Component {
 
+  constructor(props) {  
+    super(props);  
+    this.state = {  
+      icon: [
+        require('../../assets/images/weather_sunny_small.png'),
+        require('../../assets/images/weather_cloud_small.png'),
+        require('../../assets/images/weather_rain_small.png'),
+        require('../../assets/images/weather_snow_small.png'),
+        require('../../assets/images/weather_light_small.png')
+      ],
+    };  
+  }  
+
   content() {
     if (false) {
       return (
@@ -16,11 +29,11 @@ class Cell extends Component {
     } else {
       return (
         <View style={styles.content}>
-          <Image style={styles.contentT}/>
+          <Image style={styles.contentT} source={require('../../assets/images/diary_top.png')}/>
           <View style={styles.contentC}>
-            <Text style={styles.contentText}>{this.props.item.key}</Text>
+            <Text numberOfLines={3} style={styles.contentText}>{this.props.item.content}</Text>
           </View>
-          <Image style={styles.contentB}/>
+          <Image style={styles.contentB} source={require('../../assets/images/diary_down.png')}/>
         </View>
       )
     }
@@ -29,9 +42,9 @@ class Cell extends Component {
   left() {
     return (
       <View style={styles.left}>
-        <Text style={styles.name}>19</Text>
-        <Text style={styles.detail}>FIR</Text>
-        <Image style={styles.icon}/>
+        <Text style={styles.name}>{this.props.item.day}</Text>
+        <Text style={styles.detail}>{DateManager.getWeekday(this.props.item.year,this.props.item.month,this.props.item.day)[1]}</Text>
+        <Image style={styles.icon} source={this.state.icon[this.props.item.weather]}/>
       </View>
     )
   }
@@ -44,12 +57,14 @@ class Cell extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.subview}>
-          {this.left()}
-          {this.right()}
+      <TouchableOpacity activeOpacity={1} onPress={this.props.onPress}>
+        <View style={styles.container}>
+          <View style={styles.subview}>
+            {this.left()}
+            {this.right()}
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -92,7 +107,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 20,
     height: 20,
-    backgroundColor: LineColor,
     marginTop: 5,
   },
 
@@ -107,7 +121,6 @@ const styles = StyleSheet.create({
   contentT: {
     width: 20,
     height: 20,
-    backgroundColor: 'red',
   },
   contentC: {
     flex: 1,
@@ -122,7 +135,6 @@ const styles = StyleSheet.create({
   contentB: {
     width: 20,
     height: 20,
-    backgroundColor: 'red',
     alignSelf: 'flex-end',
   },
   pic: {

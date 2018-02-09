@@ -26,6 +26,19 @@ class Home extends PureComponent {
       isDetail: false
     }
   }
+  // componentWillUpdate = (nextProps, nextState) => {
+  //   console.log("更改属性");
+  //   let condition1 = nextState.currentYear != this.state.currentYear;
+  //   let condition2 = nextState.isDetail != this.state.isDetail;
+  //   let condition3 = nextProps.DataReducer != this.props.DataReducer;
+  //   if (condition1 || condition2 || condition3) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  
+  
+  
   componentDidMount() {
     const { DiaryAction } = this.props;
     // 初始化
@@ -34,10 +47,10 @@ class Home extends PureComponent {
     // DiaryAction.saveDiarySaga({
     //   name: '标题1', 
     //   content: '内容1', 
-    //   weather: '天气1', 
+    //   weather: '3', 
     //   year: '2018',
     //   month: '2',
-    //   day: '12', 
+    //   day: '14', 
     //   photos: []
     // });
     // 查
@@ -71,8 +84,11 @@ class Home extends PureComponent {
   _onPositive=(i)=>{
     InteractionManager.runAfterInteractions(() => {
       const { navigate } = this.props.navigation;
-      
-      navigate("List", {name: DateManager.getMonthEnglish(i)+"/"+this.state.currentYear});
+      navigate("List", {
+        name: DateManager.getMonthEnglish(i)+"/"+this.state.currentYear,
+        year: this.state.currentYear,
+        month: i+1
+      });
     })
   }
   // 反面
@@ -100,7 +116,8 @@ class Home extends PureComponent {
       this.setState({
         currentYear: DateManager.getYear()
       })
-    }, 1000);
+      this.refs.hud.setCurrentIndex(-1)
+    }, 500);
   }
   // 编辑日记
   _onBottomEditClick=()=>{
@@ -149,7 +166,7 @@ class Home extends PureComponent {
         onPositive={this._onPositive}
         onOpposite={this._onOpposite}
         currentYear={this.state.currentYear}
-        diarys={DiaryReducer.diarys}
+        diarys={DiaryReducer.dateDiarys}
       />
     )
   }
@@ -157,18 +174,23 @@ class Home extends PureComponent {
     return (
       <Bottom 
         isDetail={this.state.isDetail}
+        // 切换正反面
         onChange={this._onBottomChangClick}
+        // 点击编辑
         onEdit={this._onBottomEditClick}
+        // 点击今日
         onPress={this._onBottomCurrentClick}
       />
     )
   }
   hud() {
+    const { DiaryReducer } = this.props;
     return (
       <KKInputHUD 
         ref={"hud"} 
         type={HUD.DATE}
         onPress={this._onHudClick}
+        diarys={DiaryReducer.dateDiarys}
       />
     )
   }
