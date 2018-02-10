@@ -27,43 +27,39 @@ class Home extends PureComponent {
     }
   }
   componentWillUpdate = (nextProps, nextState) => {
-    console.log("更改属性");
-    let condition1 = nextState.currentYear != this.state.currentYear;
-    let condition2 = nextState.isDetail != this.state.isDetail;
-    let condition3 = nextProps.DataReducer != this.props.DataReducer;
-    if (condition1 || condition2 || condition3) {
-      return true;
+    let condition1 = nextState.isDetail != this.state.isDetail;
+    if (condition1) {
+      return false;
     }
     return true;
   }
-  
-  
-  
   componentDidMount() {
     const { DiaryAction } = this.props;
     // 初始化
     DiaryAction.initializationSaga();
     // 增
     // DiaryAction.saveDiarySaga({
-    //   name: '标题1', 
-    //   content: '内容1', 
+    //   name: '123123123123123123', 
+    //   content: '12312312321312321asdas', 
     //   weather: '3', 
     //   year: '2018',
     //   month: '2',
-    //   day: '14', 
+    //   day: '11', 
     //   photos: []
     // });
     // 查
     DiaryAction.loadDiarySaga();
     // 改
-    // DiaryAction.replaceDiarySaga({
-    //   id: 1,
-    //   name: '标题1', 
-    //   content: '内容1', 
-    //   weather: '天气22', 
-    //   time: '时间1', 
-    //   photos: []
-    // });
+    RealmManager.replaceDiary(
+      1, 
+      '啊啊啊啊啊啊a', 
+      '奥术大师大奥所多',
+      '2018',
+      '2',
+      '10',
+      '1',
+      [],
+    )
     // 删
     // DiaryAction.removeDiarySaga('id == 1')
   }
@@ -97,22 +93,10 @@ class Home extends PureComponent {
     const { DiaryReducer } = this.props;
     let diarys = DiaryReducer.dateDiarys;
     let year = this.state.currentYear;
-    if (diarys[year] != null && 
-        diarys[year][month] != null && 
-        diarys[year][month][day] != null) {
-      InteractionManager.runAfterInteractions(() => {
-        const { navigate } = this.props.navigation;
-        navigate("Diary");
-      })
+    if (diarys[year] != null && diarys[year][month] != null && diarys[year][month][day] != null) {
+      this.pushDiary(year, month, day);
     } else {
-      InteractionManager.runAfterInteractions(() => {
-        const { navigate } = this.props.navigation;
-        navigate("Edit", {
-          "year": year,
-          "month": month,
-          "day": day
-        });
-      })
+      this.pushEdit(year, month, day);
     }
   }
   // hud选择
@@ -144,9 +128,10 @@ class Home extends PureComponent {
       let day = DateManager.getDay();
       const { navigate } = this.props.navigation;
       navigate("Edit", {
-        "year": year,
-        "month": month,
-        "day": day
+        year: year,
+        month: month,
+        day: day,
+        type: 0
       });
     })
   }
@@ -158,6 +143,36 @@ class Home extends PureComponent {
         isDetail: !this.state.isDetail
       })
     }
+  }
+
+  //==================== 操作 ====================//
+  pushDiary(year, month, day) {
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      navigate("Diary", {
+        year: year,
+        month: month,
+        day: day,
+      });
+    })
+  }
+  pushEdit(year, month, day) {
+    InteractionManager.runAfterInteractions(() => {
+      const { navigate } = this.props.navigation;
+      var that = this;
+      navigate("Edit", {
+        year: year,
+        month: month,
+        day: day,
+        type: 0,
+        callback: ()=>{
+          console.log("回调了")
+          setTimeout(() => {
+            that.pushDiary(year, month, day);
+          }, 1000);
+        }
+      });
+    })
   }
 
   //==================== 控件 ====================//

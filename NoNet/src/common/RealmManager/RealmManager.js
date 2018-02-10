@@ -2,13 +2,13 @@ import StorageManager from './StorageManager';
 
 var Realm = require('realm');
 var realm;
+var realmListener = null;
 // 连接组件 
 export default class RealmManager {
 
   //==================== 初始化 ====================//
   // 初始化数据
   static initialization() {
-    console.log("开始初始化")
     RealmManager.initializationRealm();
     StorageManager.initialization();
   }
@@ -25,7 +25,7 @@ export default class RealmManager {
         day:     {type: 'string', default: ''},
         photos:  'string[]',
         content: {type: 'string', default: ''},
-        weather: {type: 'string', default: 'sunny'},
+        weather: {type: 'string', default: ''},
       }
     });
     realm = new Realm({schema: schemas});
@@ -34,8 +34,17 @@ export default class RealmManager {
 
   //==================== 日记 ====================//
   // 增日记
-  static saveDiary(name, content, year, month, day, weather, photos) {
+  static saveDiary(name, content, year, month, day, weather, photos, callback) {
+    // if (realmListener != null) {
+    //   realmListener.remove();
+    // }
+    // realmListener = realm.addListener('change', () => {
+    //   if (callback) {
+    //     callback();
+    //   }
+    // });
     RealmManager.loadMaxId((maxid)=>{
+      console.log("开始存储")
       realm.write(() => {
         realm.create('Diary', {
           id: maxid, 
@@ -49,7 +58,7 @@ export default class RealmManager {
         });
       })
       RealmManager.saveMaxId(maxid + 1);
-    })
+    });
   }
   // 查日记
   static loadDiary(filtered) {
@@ -57,7 +66,7 @@ export default class RealmManager {
       let persons = realm.objects('Diary');
       if (filtered != null) {
         let person = persons.filtered(filtered);
-        console.log("AAA")
+        return person;
       }
       return persons;
     } else {
@@ -65,22 +74,32 @@ export default class RealmManager {
     }
   }
   // 改日记
-  static replaceDiary(id, name, content, year, month, day, time, photos) {
+  static replaceDiary(id, name, content, year, month, day, weather, photos) {
+    console.log("正在更改")
+    console.log(id);
     realm.write(() => {
       realm.create('Diary', {
         id: id, 
         name: name, 
-        weather: weather,
-        photos: photos,
         content: content,
         year: year,
         month: month,
         day: day,
+        weather: weather,
+        photos: photos,
       }, true);
     })
   }
   // 删日记
-  static removeDiary(filtered) {
+  static removeDiary(filtered, callback) {
+    // if (realmListener != null) {
+    //   realmListener.remove();
+    // }
+    // realmListener = realm.addListener('change', () => {
+    //   if (callback) {
+    //     callback();
+    //   }
+    // });
     realm.write(() => {
       // 获取Person对象
       let persons = realm.objects('Diary');
@@ -93,14 +112,30 @@ export default class RealmManager {
   }
 
 
+  // 监听事件
+  static becomeListener(callback) {
+    if (realmListener != null) {
+      realmListener.remove();
+    }
+    realmListener = realm.addListener('change', () => {
+      console.log("回调")
+      if (callback) {
+        callback();
+      }
+    });
+  }
+
+
   //==================== ID设置 ====================//
   // 获取最大ID
   static loadMaxId(block) {
     StorageManager.loadWithKey('MAXID', (data)=>{
+      console.log("进来了1")
       if (block) {
-          block(data);
+        block(data);
       }
     },(err)=>{
+      console.log("进来了2")
       if (block) {
           block(1);
       }
@@ -111,8 +146,8 @@ export default class RealmManager {
     if (id != null) {
       StorageManager.saveWithKey('MAXID', id, null); 
     } else {
-      RealmManager.loadMaxId((id)=>{
-        StorageManager.saveWithKey('MAXID', id+1, null); 
+      RealmManager.loadMaxId((maxid)=>{
+        StorageManager.saveWithKey('MAXID', maxid+1, null); 
       });
     }
   }

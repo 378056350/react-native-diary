@@ -108,11 +108,10 @@ class Photo extends Component {
   }
   // 保存
   _save=()=>{
-    this.refs.toast.show(1000);
+    this.refs.toast2.show(1000);
     let arr = this.turnBase64Icons(0, [], (arr)=>{
       const {goBack, state} = this.props.navigation;
       state.params.callback(arr);
-      console.log(arr);
       goBack();
     });
   }
@@ -284,6 +283,12 @@ class Photo extends Component {
       <Toast ref={"toast"} text={"抱歉哦, 最多9张图片啦"}/>
     )
   }
+  // 提示
+  toast2=()=>{
+    return (
+      <Toast ref={"toast2"} text={"正在转码, 请稍后"}/>
+    )
+  }
   // 滚动视图
   scroll=()=>{
     return (
@@ -292,7 +297,7 @@ class Photo extends Component {
         onMomentumScrollEnd = {this._contentViewScroll}
       >
         <View style={styles.subview}>
-          {this.camera()}
+          {/* {this.camera()} */}
           {this.cameraView()}
           {this.photoView()}
         </View>
@@ -305,6 +310,7 @@ class Photo extends Component {
         {this.nav()}
         {this.scroll()}
         {this.toast()}
+        {this.toast2()}
       </View>
     );
   }

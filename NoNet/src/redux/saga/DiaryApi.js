@@ -12,7 +12,7 @@ export function initialization() {
 // 增
 export function saveDiary(data) {
     return new Promise((resolve) => {
-        let diary = RealmManager.saveDiary(data.name, data.content, data.year, data.month, data.day, data.weather, data.photos);
+        let diary = RealmManager.saveDiary(data.name, data.content, data.year, data.month, data.day, data.weather, data.photos, data.callback);
         resolve();
     });
 }
@@ -37,7 +37,7 @@ export function replaceDiary(data) {
 // 删
 export function removeDiary(filtered) {
     return new Promise((resolve) => {
-        RealmManager.removeDiary(filtered)
+        RealmManager.removeDiary(filtered.filtered, filtered.callback)
         resolve();
     });
 }

@@ -23,7 +23,7 @@ import { connect } from 'react-redux';
 // action
 import { diaryAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast, AutoExpandingTextInput, DateManager } from '../../common/index';
+import { Navigation, ThirdPicker, KeyboardAccess, KKInputHUD, HUD, Swipe, Toast, AutoExpandingTextInput, DateManager, RealmManager } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor, TitleColor } from '../../utils/index';
@@ -122,23 +122,57 @@ class Edit extends Component {
     const { params } = this.props.navigation.state;
     const { goBack } = this.props.navigation;
     const { DiaryAction } = this.props;
-    DiaryAction.saveDiarySaga({
-      name: this.state.name, 
-      content: this.refs.content.getContent(), 
-      weather: this.state.currentWeatherIndex + "", 
-      photos: this.state.assets,
-      year: params.year+"",
-      month: params.month+"",
-      day: params.day+"",
-    })
-    setTimeout(() => {
-      goBack();
-      DiaryAction.loadDiarySaga();
-    }, 1000);
+    // 增
+    if (params.type == 0) {
+      this.refs.toast.show(1000)
+      RealmManager.saveDiary(
+        this.state.name,
+        this.refs.content.getContent(),
+        params.year+"",
+        params.month+"",
+        params.day+"",
+        this.state.currentWeatherIndex + "", 
+        [],
+        // ()=>{
+        //   goBack();
+        //   DiaryAction.loadDiarySaga();
+        //   params.callback();
+        // }
+      );
+      // DiaryAction.saveDiarySaga({
+      //   name: this.state.name, 
+      //   content: this.refs.content.getContent(), 
+      //   weather: this.state.currentWeatherIndex + "", 
+      //   year: params.year+"",
+      //   month: params.month+"",
+      //   day: params.day+"",
+      //   // photos: this.state.assets,
+      //   photos: [],
+      //   // callback: ()=>{
+      //   //   goBack();
+      //   //   DiaryAction.loadDiarySaga();
+      //   //   params.callback();
+      //   // }
+      // })
+    }
+    // 改
+    else if (params.type == 1) {
+      this.refs.toast2.show(1000)
+      const { params } = this.props.navigation.state;
+      RealmManager.replaceDiary(
+        parseInt(params.id), 
+        this.state.name, 
+        this.refs.content.getContent(),
+        params.year,
+        params.month,
+        params.day,
+        this.state.currentWeatherIndex + "",
+        [],
+      )
+    }
   } 
   // 手指按下Scroll
   _onScrollStart=()=>{
-    console.log("onScrollStart")
     that.setState({
       titleEditable: true
     })
@@ -146,7 +180,6 @@ class Edit extends Component {
   }
   // 手指移动Scroll
   _onScrollMove=()=>{
-    console.log("onScollMove")
     if (that.refs.content.isFocused() == false && 
         that.refs.title.isFocused() == false) {
       that.setState({
@@ -157,8 +190,6 @@ class Edit extends Component {
   }
   // 手指离开Scroll
   _onScrollEnd=()=>{
-    console.log("onScrollEnd")
-
   }
   // 内容尺寸改变
   _onContentSizeChange() {
@@ -331,6 +362,17 @@ class Edit extends Component {
         }]}/>
     )
   }
+  // 提示
+  toast=()=>{
+    return (
+      <Toast ref={"toast"} text={"正在保存"}/>
+    )
+  }
+  toast2=()=>{
+    return (
+      <Toast ref={"toast2"} text={"正在修改"}/>
+    )
+  }
   render() {
     return (
       <Animated.View style={[styles.container,{
@@ -345,6 +387,8 @@ class Edit extends Component {
         {this.nav()}
         {this.ketaccess()}
         {this.hud()}
+        {this.toast()}
+        {this.toast2()}
       </Animated.View>
     );
   }

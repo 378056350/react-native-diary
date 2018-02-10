@@ -19,7 +19,7 @@ function* initializationSaga() {
 // 增
 function* saveDiarySaga(ret) {
     yield call(saveDiary, ret.data);
-    yield call(loadDiarySaga, {});
+    // yield call(loadDiarySaga, {});
 }
 // 查
 function* loadDiarySaga(ret) {
@@ -61,12 +61,12 @@ function* loadDiarySaga(ret) {
 // 改
 function* replaceDiarySaga(ret) {
     let diarys = yield call(replaceDiary, ret.data);
-    yield call(loadDiarySaga, {});
+    // yield call(loadDiarySaga, {});
 }
 // 删
 function* removeDiarySaga(ret) {
     let diarys = yield call(removeDiary, ret.filtered);
-    yield call(loadDiarySaga, {});
+    // yield call(loadDiarySaga, {});
 }
 
 

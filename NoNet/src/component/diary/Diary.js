@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 // action
 import { diaryAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, DateManager, Toast, Swipe, KKInputHUD } from '../../common/index';
+import { Navigation, ThirdPicker, DateManager, RealmManager, Toast, Swipe, KKInputHUD } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor, TitleColor } from '../../utils/index';
@@ -31,7 +31,39 @@ class Diary extends PureComponent {
     this.state = {
       modalVisible: true,
       yOffset: new Animated.Value(0),
+      icon: [
+        require('../../assets/images/weather_sunny_small.png'),
+        require('../../assets/images/weather_cloud_small.png'),
+        require('../../assets/images/weather_rain_small.png'),
+        require('../../assets/images/weather_snow_small.png'),
+        require('../../assets/images/weather_light_small.png')
+      ],
+      diary: {
+        name: '',
+        weather: 0,
+        year: '0',
+        month: '0',
+        day: '0',
+        photos: [],
+        content: ''
+      }
     }
+  }
+  componentDidMount() {
+    const { params } = this.props.navigation.state;
+    let diaryArr = RealmManager.loadDiary("year == '" + params.year + "' && month == '" + params.month + "' && day == '" + params.day + "'");
+    if (diaryArr.length != 0) {
+      this.setState({
+        diary: diaryArr[0]
+      })
+    }
+  }
+  componentWillUpdate = (nextProps, nextState) => {
+    let condition1 = nextState.diary != this.state.diary && nextState.diary.name != undefined;
+    if (condition1) {
+      return true;
+    }
+    return false;
   }
   
   //==================== 点击 ====================//
@@ -62,6 +94,19 @@ class Diary extends PureComponent {
     });
   }
   clickOne() {
+    const { navigate } = this.props.navigation;
+    let diary = this.state.diary;
+    navigate("Edit", {
+      id: diary.id,
+      name: diary.name,
+      year: diary.year,
+      month: diary.month,
+      day: diary.day,
+      content: diary.content,
+      weather: diary.weather,
+      photos: diary.photos,
+      type: 1,
+    });
   }
   clickTwo() {
     Alert.alert(
@@ -75,7 +120,26 @@ class Diary extends PureComponent {
     )
   }
   removeDiary=()=>{
-
+    const { params } = this.props.navigation.state;
+    const { goBack } = this.props.navigation;
+    const { DiaryAction } = this.props;
+    this.refs.toast.show(1000)
+    this.state.diary = {
+      name: undefined,
+      weather: 0,
+      year: '0',
+      month: '0',
+      day: '0',
+      photos: [],
+      content: '',
+    }
+    DiaryAction.removeDiarySaga({
+      filtered: "year == '" + params.year + "' && month == '" + params.month + "' && day == '" + params.day + "'",
+      callback: ()=>{
+        goBack();
+        DiaryAction.loadDiarySaga();
+      }
+    });
   }
 
   //==================== 控件 ====================//
@@ -120,13 +184,14 @@ class Diary extends PureComponent {
             })
           }]
         }}
-        assets={[]}
+        assets={this.state.diary.photos}
         addPress={this._onAddPress}
         removePress={this._onRemovePress}
       />
     )
   }
   content() {
+    let date = DateManager.getDateStr(this.state.diary.year,this.state.diary.month,this.state.diary.day);
     return (
       <ScrollView 
         style={styles.content}
@@ -138,12 +203,18 @@ class Diary extends PureComponent {
         }
       >
         <View style={styles.subcontent}>
-          <Text style={styles.date}>asdasdas</Text>
-          <Text style={styles.name}>asdasdas</Text>
-          <Image style={styles.weather} source={require('../../assets/images/weather_sunny_small.png')}/>
-          <Text style={styles.detail}>请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯,请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯.请问大师第瓯江路可能就或I噢就离开那就开会欧咯,请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯请问大师第瓯江路可能就或I噢就离开那就开会欧咯</Text>
+          <Text style={styles.date}>{date}</Text>
+          <Text style={styles.name}>{this.state.diary.name}</Text>
+          <Image style={styles.weather} source={this.state.icon[this.state.diary.weather]}/>
+          <Text style={styles.detail}>{this.state.diary.content}</Text>
         </View>
       </ScrollView>
+    )
+  }
+  // 提示
+  toast=()=>{
+    return (
+      <Toast ref={"toast"} text={"正在删除, 请稍后"}/>
     )
   }
   render() {
@@ -152,6 +223,7 @@ class Diary extends PureComponent {
         {this.content()}
         {this.swipe()}
         {this.nav()}
+        {this.toast()}
       </View>
     );
   }

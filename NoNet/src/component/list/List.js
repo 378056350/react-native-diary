@@ -64,13 +64,14 @@ class List extends Component {
   }
   _onPress=(item)=>{
     const { navigate } = this.props.navigation;
-    navigate("Edit", {
+    navigate("Diary", {
       year: item.year,
       month: item.month,
       day: item.day,
       weather: item.weather,
       name: item.name,
       content: item.content,
+      photos: item.photos
     });
   }
 
