@@ -57,7 +57,6 @@ class Positive extends PureComponent {
 
   //=================== 点击 ===================//
   _onColor=()=>{
-    console.log("asdasd")
   }
 
   //=================== 控件 ===================//

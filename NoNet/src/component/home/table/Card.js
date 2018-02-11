@@ -13,7 +13,6 @@ import {
   InteractionManager 
 } from 'react-native';
 import Positive from './Positive';
-import Opposite from './Opposite';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
@@ -21,6 +20,7 @@ const DURATION = 250;
 const CARD_WIDTH = ScreenWidth - 90;
 const CARD_HEIGHT = CARD_WIDTH / 5 * 8;
 
+let OppositeComponent = null;
 class Card extends PureComponent {
 
   //=================== 初始化 ===================//
@@ -30,10 +30,29 @@ class Card extends PureComponent {
       rotateValue: new Animated.Value(0),
       isAnimated: false,
       isPositive: true,
+      needsComponent: false,
     }
   }
   componentDidMount() {
     this.refs.subview.shadowOpacity = 5;
+    // 界面
+    this.timer = setTimeout(()=>{
+      if (OppositeComponent == null) {
+        OppositeComponent = require('./Opposite').default;
+      }
+      this.setState(() => ({
+        needsComponent: true,
+      }));
+    },2000);
+  }
+  componentWillUpdate = (nextProps, nextState) => {
+    let condition1 = nextState.isPositive != this.state.isPositive;
+    let condition2 = nextState.isAnimated != this.state.isAnimated;
+    let condition3 = nextState.rotateValue != this.state.rotateValue;
+    if (condition1 || condition2|| condition3) {
+      return false;
+    } 
+    return true;
   }
   getAnimated() {
     return this.state.isAnimated
@@ -151,7 +170,7 @@ class Card extends PureComponent {
   }
   opposite() {
     return (
-      <Opposite 
+      <OppositeComponent 
         ref={"opposite"}
         month={this.props.month}
         currentYear={this.props.currentYear}
@@ -198,7 +217,7 @@ class Card extends PureComponent {
                 }
             ]
           }]}>
-            {this.opposite()}
+            {this.state.needsComponent ? this.opposite() : null}
             {this.positive()}
             {this.shadow()}
           </Animated.View>

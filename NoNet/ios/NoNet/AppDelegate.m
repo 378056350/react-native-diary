@@ -8,6 +8,8 @@
  */
 
 #import "AppDelegate.h"
+#import "AppDelegate+UMShareManager.h"
+#import <UMSocialCore/UMSocialCore.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -30,7 +32,15 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [self umShareManager];
   return YES;
+}
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+  BOOL result = [[UMSocialManager defaultManager] handleOpenURL:url];
+  if (!result) {
+    
+  }
+  return result;
 }
 
 @end

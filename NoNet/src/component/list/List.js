@@ -20,11 +20,17 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: []
+      dataSource: [],
+      needsComponent: false,
     }
   }
   componentDidMount() {
-    this.data();
+    this.timer = setTimeout(()=>{
+      this.data();
+    },300);
+    this.setState({
+      needsComponent: true,
+    });
   }
 
   //==================== 删除 ====================//
@@ -155,7 +161,7 @@ class List extends Component {
     return (
       <View style={styles.container}>
         {this.nav()}
-        {this.table()}
+        {this.state.needsComponent ? this.table() : null}
       </View>
     );
   }

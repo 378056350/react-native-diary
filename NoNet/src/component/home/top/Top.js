@@ -1,10 +1,10 @@
 // Default
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Platform, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
-class Top extends Component {
+class Top extends PureComponent {
 
   render() {
     return (

@@ -123,12 +123,12 @@ class Home extends PureComponent {
   // 当前月点击
   _onBottomCurrentClick=()=>{
     this.refs.table.scrollWithIndex(DateManager.getMonth()-1);
-    setTimeout(() => {
+    // setTimeout(() => {
       this.setState({
         currentYear: DateManager.getYear()
       })
       this.refs.hud.setCurrentIndex(-1)
-    }, 500);
+    // }, 500);
   }
   // 编辑日记
   _onBottomEditClick=()=>{

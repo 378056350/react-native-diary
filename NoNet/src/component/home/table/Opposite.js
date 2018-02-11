@@ -39,7 +39,7 @@ class Opposite extends PureComponent {
       this.setState(() => ({
         needsComponent: true,
       }));
-    },300);
+    },2000);
   }
   componentWillUnmount() {
     this.timer && clearInterval(this.timer);
@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: 40,
-    // fontWeight: '300',
     color: 'rgba(100,100,100,1)',
     fontFamily: 'Exo2-Regular'
   },

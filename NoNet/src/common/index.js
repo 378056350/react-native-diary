@@ -17,6 +17,7 @@ import RealmManager from './RealmManager/RealmManager';
 import PhotoManager from './PhotoManager/PhotoManager';
 import DiaryManager from './DiaryManager/DiaryManager';
 import Device from './Device/Device';
+import Share from './Share/Share';
 
 export {
   Line,
@@ -37,5 +38,6 @@ export {
   RealmManager,
   PhotoManager,
   DiaryManager,
-  Device
+  Device,
+  Share
 }

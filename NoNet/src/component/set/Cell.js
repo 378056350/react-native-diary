@@ -1,5 +1,6 @@
 // Default
 import React, { Component, PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Platform, StyleSheet, Text, View, Image, SectionList, TouchableHighlight, Switch } from 'react-native';
 // Common
 import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
@@ -8,10 +9,12 @@ import { ScreenWidth, ScreenHeight, StreamColor } from '../../utils/index';
 
 class Cell extends PureComponent {
 
+  //=================== 点击 ===================//
   _onPress(item) {
-    // this.props.onPress(item)
+    this.props.onPress(item)
   }
 
+  //=================== 控件 ===================//
   detail() {
     if (this.props.detail) {
       return (
@@ -85,5 +88,12 @@ const styles = StyleSheet.create({
     height: 15,
   }
 });
+
+Cell.defaultProps = {
+  onPress: ()=>{},
+}
+Cell.propTypes = {
+  onPress: PropTypes.func.isRequired,
+}
 
 export default Cell;

@@ -20,6 +20,14 @@ class Table extends Component {
       animated: false
     })
   }
+  componentWillUpdate = (nextProps, nextState) => {
+    let condition1 = nextProps.diarys != this.props.diarys;
+    let condition2 = nextProps.currentYear != this.props.currentYear;
+    if (condition1 || condition2 ) {
+      return true;
+    } 
+    return false;
+  }
 
   //==================== 动画 ====================//
   show(isDetail) {
@@ -37,7 +45,6 @@ class Table extends Component {
 
   //==================== 数据 ====================//
   getCurrentMonth() {
-    console.log(this.refs.scroll);
   }
 
   //==================== 点击 ====================//
