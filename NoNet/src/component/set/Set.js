@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 // action
 import { diaryAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, DateManager, Toast } from '../../common/index';
+import { Navigation, Device, ThirdPicker, DateManager, Toast } from '../../common/index';
 // Utils
 import ListFooter from './ListFooter';
 import SectionHeader from './SectionHeader';
@@ -105,8 +105,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: StreamColor,
+    ...Device.ifDevice({
+      paddingBottom: 20,
+    },{
+      paddingBottom: 0,
+    },{
+      paddingBottom: 0,
+    }),
   },
-
 });
 
 // reducer

@@ -14,6 +14,7 @@ import YearCell from './YearCell';
 import WeatherCell from './WeatherCell';
 import Line from '../Line/Line';
 import DateManager from '../DateManager/DateManager';
+import Device from '../Device/Device';
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor } from '../../utils/UIUtils';
 
 export const HUD = {
@@ -241,6 +242,13 @@ const styles = StyleSheet.create({
     width: ScreenWidth,
     height: ScreenHeight / 5 * 2,
     backgroundColor: StreamColor,
+    ...Device.ifDevice({
+      paddingBottom: 20,
+    },{
+      paddingBottom: 0,
+    },{
+      paddingBottom: 0,
+    }),
   },
   top: {
     height: ScreenHeight / 5 * 2 / 5,
@@ -266,7 +274,6 @@ const styles = StyleSheet.create({
   },
   topRightText: {
     fontSize: 15,
-    // fontWeight: '400',
     color: 'rgba(100,100,100,1)',
     fontFamily: 'Exo2-Bold',
   },

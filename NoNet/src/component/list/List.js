@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 // action
 import { diaryAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, RealmManager, DateManager, Toast, KKInputHUD } from '../../common/index';
+import { Navigation, ThirdPicker, Device, RealmManager, DateManager, Toast, KKInputHUD } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 // Utils
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
@@ -144,6 +144,7 @@ class List extends Component {
             </TouchableOpacity>
           </View>
         )}
+        ListFooterComponent={<View style={{height: 20}}/>}
         disableRightSwipe={true}
         rightOpenValue={-75}
         onRowDidOpen={this.onRowDidOpen}

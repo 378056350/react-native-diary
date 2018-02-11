@@ -2,7 +2,7 @@
 import React, { Component, PureComponent } from 'react';
 import { Platform, StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
 // Utils
-import { Button, DateManager } from '../../../common/index';
+import { Button, DateManager, Device } from '../../../common/index';
 import CurrentDay from './CurrentDay';
 import { ScreenWidth, ScreenHeight, StreamColor } from '../../../utils/index';
 
@@ -107,7 +107,14 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 0},
     shadowColor: 'black',
     shadowOpacity: 0.2,
-    shadowRadius: 2
+    shadowRadius: 2,
+    ...Device.ifDevice({
+      marginBottom: 20,
+    },{
+      marginBottom: 0,
+    },{
+      marginBottom: 0,
+    }),
   },
   icon: {
     width: 15,

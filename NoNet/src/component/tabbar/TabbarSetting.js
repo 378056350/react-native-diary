@@ -1,6 +1,7 @@
 
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 import { StreamColor, TitleColor } from '../../utils/index';
+import { Device } from '../../common/index';
 
 //============================ navigation ============================//
 /** 高度 */

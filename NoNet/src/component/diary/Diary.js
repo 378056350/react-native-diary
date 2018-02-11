@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    height: ScreenHeight
+    height: ScreenHeight,
   },
   nav: {
     backgroundColor: 'white', 
@@ -296,6 +296,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     textAlign: 'justify',
     marginTop: 15,
+    paddingBottom: 40,
   }
 });
 

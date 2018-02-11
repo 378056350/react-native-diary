@@ -12,11 +12,16 @@ import {
   Image,
   Animated,
 } from 'react-native';
+import Device from '../Device/Device';
 // Utils
 import { ScreenWidth, ScreenHeight, StreamColor, TitleColor } from '../../utils/index';
 // 导航栏高度
 const navigationH = Platform.select({ios: 64, android: 44});
 const navigationTop = Platform.select({ios: 20, android: 0});
+// const navigationTop = ()=>{
+//   return Platform.OS === 'ios' ? 20 : 0
+// }
+
 
 class Navigation extends Component {
 
@@ -135,6 +140,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: navigationTop,
     alignItems: 'center',
+    ...Device.ifDevice({
+      marginTop: 20,
+    },{
+      marginTop: 0,
+    },{
+      marginTop: 0,
+    }),
   },
   touchLeft: {
     flexDirection: 'row', 
@@ -200,7 +212,6 @@ Navigation.defaultProps = {
   rightIcon: null,
   rightStyle: {},
 }
-
 Navigation.propTypes = {
   isAllowTouch: PropTypes.bool.isRequired,
   leftClick:    PropTypes.func.isRequired,

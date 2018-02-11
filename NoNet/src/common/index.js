@@ -16,6 +16,7 @@ import Calender from './Calender/Calender';
 import RealmManager from './RealmManager/RealmManager';
 import PhotoManager from './PhotoManager/PhotoManager';
 import DiaryManager from './DiaryManager/DiaryManager';
+import Device from './Device/Device';
 
 export {
   Line,
@@ -35,5 +36,6 @@ export {
   Calender,
   RealmManager,
   PhotoManager,
-  DiaryManager
+  DiaryManager,
+  Device
 }
