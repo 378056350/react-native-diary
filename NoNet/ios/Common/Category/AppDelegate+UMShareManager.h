@@ -7,9 +7,11 @@
 //
 
 #import "AppDelegate.h"
+#import <UMSocialCore/UMSocialCore.h>
 
 @interface AppDelegate (UMShareManager)
 
 - (void)umShareManager;
++ (void)shareWithPlatform:(UMSocialPlatformType)platformType;
 
 @end

@@ -13,6 +13,7 @@ import ListFooter from './ListFooter';
 import SectionHeader from './SectionHeader';
 import SectionFooter from './SectionFooter';
 import Cell from './Cell';
+import UmShare from './UmShare';
 import { ScreenWidth, ScreenHeight, StreamColor, LineColor } from '../../utils/index';
 import Line from '../../common/Line/Line';
 
@@ -43,7 +44,8 @@ class Set extends Component {
   _onPress=(item)=>{
     console.log(item);
     if (item.section == 1 && item.row == 1) {
-      this.refs.share.show()
+      // this.refs.share.show()
+      UmShare.show()
     }
   }
 
@@ -86,7 +88,7 @@ class Set extends Component {
           <View style={{height: 20}}><Line color={LineColor}/></View>
         <SectionHeader name={this.state.name[1]} detail={this.state.detail[1]}/>
           <Cell item={{section: 1, row: 0, name: this.state.cell[1][0]}} detail={"这里还没做"} next={true}/>
-          <Cell item={{section: 1, row: 1, name: this.state.cell[1][1]}} detail={"这里还没做"} next={true} onPress={this._onPress}/>
+          <Cell item={{section: 1, row: 1, name: this.state.cell[1][1]}} next={true} onPress={this._onPress}/>
           <Cell item={{section: 1, row: 2, name: this.state.cell[1][2]}} detail={"这里还没做"} next={true}/>
           <View style={{height: 20}}><Line color={LineColor}/></View>
         <SectionHeader name={this.state.name[2]} detail={this.state.detail[2]}/>
