@@ -72,11 +72,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     color: 'rgba(50,50,50,1)',
+    fontFamily: 'Exo2-Regular',
   },
   detail: {
     fontSize: 12,
     color: 'rgba(150,150,150,1)',
-    fontWeight: '300'
+    // fontWeight: '300',
+    fontFamily: 'Exo2-ExtraLight',
   },
   icon: {
     width: 15,

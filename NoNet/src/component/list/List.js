@@ -1,13 +1,13 @@
 // Default
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TouchableOpacity, TouchableHighlight, FlatList } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, Alert, TouchableOpacity, TouchableHighlight, FlatList } from 'react-native';
 // Redux
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action
 import { diaryAction } from '../../redux/action/index';
 // Common
-import { Navigation, ThirdPicker, DateManager, Toast, KKInputHUD } from '../../common/index';
+import { Navigation, ThirdPicker, RealmManager, DateManager, Toast, KKInputHUD } from '../../common/index';
 import { NAVIGATION_HEIGHT } from '../tabbar/TabbarSetting';
 // Utils
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
@@ -33,17 +33,29 @@ class List extends Component {
 			rowMap[rowKey].closeRow();
 		}
 	}
-  deleteRow(rowMap, rowKey) {
+  removeRow(rowMap, rowKey) {
+    this.removeDiary(rowMap, rowKey, ()=>{
+      this.removeCell(rowMap, rowKey)
+    })
+    
+  }
+  removeDiary(rowMap, rowKey, callback) {
+    const { DiaryAction } = this.props;
+    let diary = this.state.dataSource[rowKey];
+    let filtered = "year == '" + diary.year + "' && month == '" + diary.month + "' && day == '" + diary.day + "'";
+    RealmManager.removeDiary(filtered, ()=>{
+      DiaryAction.loadDiarySaga();
+      callback();
+    }) 
+    // DiaryAction.removeDiarySaga(filtered);
+  }
+  removeCell(rowMap, rowKey) {
 		this.closeRow(rowMap, rowKey);
 		const newData = [...this.state.dataSource];
 		const prevIndex = this.state.dataSource.findIndex(item => item.key === rowKey);
     newData.splice(prevIndex, 1);
     this.setState({dataSource: newData});
-    
-    const { DiaryAction } = this.props;
-    let diary = this.state.dataSource[rowKey];
-    DiaryAction.removeDiarySaga("year == '" + diary.year + "' && month == '" + diary.month + "' && day == '" + diary.day + "'");
-	}
+  }
 
   //==================== 点击 ====================//
   _back=()=>{
@@ -73,6 +85,17 @@ class List extends Component {
       content: item.content,
       photos: item.photos
     });
+  }
+  _removeDiary(rowMap, rowKey) {
+    Alert.alert(
+      '你确定要删除这篇日记吗?',
+      '你不能撤销这个操作',
+      [
+        {text: '删除', onPress: ()=>this.removeRow(rowMap, rowKey), style: 'cancel'},
+        {text: '取消', onPress: () => {}},
+      ],
+      { cancelable: false }
+    )
   }
 
   //==================== 控件 ====================//
@@ -116,7 +139,7 @@ class List extends Component {
         renderItem={(data, rowMap) => this._renderItem(data)}
         renderHiddenItem={(data, rowMap) => (
           <View style={styles.rowBack}>
-            <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this.deleteRow(rowMap, data.item.key) }>
+            <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={ _ => this._removeDiary(rowMap, data.item.key) }>
               <Text style={styles.backTextWhite}>删除</Text>
             </TouchableOpacity>
           </View>

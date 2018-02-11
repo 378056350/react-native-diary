@@ -36,7 +36,9 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     lineHeight: 30,
     color: 'rgba(75,75,75,1)',
-    fontWeight: '500',
+    // fontWeight: '500',
+    fontSize: 16,
+    fontFamily: 'Exo2-Bold'
   },
   icon: {
     width: 12,

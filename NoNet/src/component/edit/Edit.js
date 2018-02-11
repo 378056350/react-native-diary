@@ -69,6 +69,7 @@ class Edit extends Component {
     this.setState({
       currentWeatherIndex: params.weather ? params.weather : 0,
       name: params.name,
+      assets: params.photos
     });
     this.refs.content.setText(params.content)
   }
@@ -124,7 +125,6 @@ class Edit extends Component {
     const { DiaryAction } = this.props;
     // 增
     if (params.type == 0) {
-      this.refs.toast.show(1000)
       RealmManager.saveDiary(
         this.state.name,
         this.refs.content.getContent(),
@@ -132,12 +132,12 @@ class Edit extends Component {
         params.month+"",
         params.day+"",
         this.state.currentWeatherIndex + "", 
-        [],
-        // ()=>{
-        //   goBack();
-        //   DiaryAction.loadDiarySaga();
-        //   params.callback();
-        // }
+        this.state.assets == undefined ? [] : this.state.assets,
+        ()=>{
+          goBack();
+          DiaryAction.loadDiarySaga();
+          params.callback();
+        }
       );
       // DiaryAction.saveDiarySaga({
       //   name: this.state.name, 
@@ -157,7 +157,6 @@ class Edit extends Component {
     }
     // 改
     else if (params.type == 1) {
-      this.refs.toast2.show(1000)
       const { params } = this.props.navigation.state;
       RealmManager.replaceDiary(
         parseInt(params.id), 
@@ -167,7 +166,10 @@ class Edit extends Component {
         params.month,
         params.day,
         this.state.currentWeatherIndex + "",
-        [],
+        this.state.assets == undefined ? [] : this.state.assets,
+        ()=>{
+          goBack();
+        }
       )
     }
   } 
@@ -362,17 +364,6 @@ class Edit extends Component {
         }]}/>
     )
   }
-  // 提示
-  toast=()=>{
-    return (
-      <Toast ref={"toast"} text={"正在保存"}/>
-    )
-  }
-  toast2=()=>{
-    return (
-      <Toast ref={"toast2"} text={"正在修改"}/>
-    )
-  }
   render() {
     return (
       <Animated.View style={[styles.container,{
@@ -387,8 +378,6 @@ class Edit extends Component {
         {this.nav()}
         {this.ketaccess()}
         {this.hud()}
-        {this.toast()}
-        {this.toast2()}
       </Animated.View>
     );
   }
@@ -427,7 +416,8 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 9,
     color: 'rgba(200,200,200,1)',
-    fontWeight: '400',
+    // fontWeight: '400',
+    fontFamily: 'Exo2-Regular',
   },
   name: {
     fontSize: 16,
@@ -436,7 +426,8 @@ const styles = StyleSheet.create({
     color: TitleColor,
     textAlign: 'center',
     marginTop: 5,
-    fontWeight: '600',
+    // fontWeight: '600',
+    fontFamily: 'Exo2-Bold',
   },
   weather: {
     width: 25,

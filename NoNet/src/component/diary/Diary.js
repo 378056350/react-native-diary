@@ -123,7 +123,6 @@ class Diary extends PureComponent {
     const { params } = this.props.navigation.state;
     const { goBack } = this.props.navigation;
     const { DiaryAction } = this.props;
-    this.refs.toast.show(1000)
     this.state.diary = {
       name: undefined,
       weather: 0,
@@ -133,13 +132,19 @@ class Diary extends PureComponent {
       photos: [],
       content: '',
     }
-    DiaryAction.removeDiarySaga({
-      filtered: "year == '" + params.year + "' && month == '" + params.month + "' && day == '" + params.day + "'",
-      callback: ()=>{
-        goBack();
-        DiaryAction.loadDiarySaga();
-      }
-    });
+
+    let filtered = "year == '" + params.year + "' && month == '" + params.month + "' && day == '" + params.day + "'";
+    RealmManager.removeDiary(filtered, ()=>{
+      DiaryAction.loadDiarySaga();
+      goBack();
+    }) 
+    // DiaryAction.removeDiarySaga({
+    //   filtered: "year == '" + params.year + "' && month == '" + params.month + "' && day == '" + params.day + "'",
+    //   callback: ()=>{
+    //     goBack();
+    //     DiaryAction.loadDiarySaga();
+    //   }
+    // });
   }
 
   //==================== 控件 ====================//
@@ -160,35 +165,41 @@ class Diary extends PureComponent {
     )
   }
   swipe() {
-    return (
-      <Swipe 
-        style={[styles.swipe, {
-          height: this.state.yOffset.interpolate({//映射到0.0,1.0之间
-            inputRange: [-ScreenHeight, 0, ScreenWidth / 5 * 3, ScreenWidth / 5 * 30],
-            outputRange: [ScreenWidth / 5 * 3, ScreenWidth / 5 * 3, 0, 0]
-          }),
-          transform: [{
-            translateY: this.state.yOffset.interpolate({//映射到0.0,1.0之间
-              inputRange: [-1000, 0, 1000],
-              outputRange: [1000, 0, 0]
-            })
-          }]
-        }]}
-        substyle={{
-          width: ScreenWidth,
-          height: ScreenWidth / 5 * 3,
-          transform: [{
-            translateY: this.state.yOffset.interpolate({//映射到0.0,1.0之间
-              inputRange: [-1000, 0, ScreenWidth / 5 * 3],
-              outputRange: [0, 0, -ScreenWidth / 5 * 2]
-            })
-          }]
-        }}
-        assets={this.state.diary.photos}
-        addPress={this._onAddPress}
-        removePress={this._onRemovePress}
-      />
-    )
+    if (this.state.diary && this.state.diary.photos.length != 0) {
+      return (
+        <Swipe 
+          style={[styles.swipe, {
+            height: this.state.yOffset.interpolate({//映射到0.0,1.0之间
+              inputRange: [-ScreenHeight, 0, ScreenWidth / 5 * 3, ScreenWidth / 5 * 30],
+              outputRange: [ScreenWidth / 5 * 3, ScreenWidth / 5 * 3, 0, 0]
+            }),
+            transform: [{
+              translateY: this.state.yOffset.interpolate({//映射到0.0,1.0之间
+                inputRange: [-1000, 0, 1000],
+                outputRange: [1000, 0, 0]
+              })
+            }]
+          }]}
+          substyle={{
+            width: ScreenWidth,
+            height: ScreenWidth / 5 * 3,
+            transform: [{
+              translateY: this.state.yOffset.interpolate({//映射到0.0,1.0之间
+                inputRange: [-1000, 0, ScreenWidth / 5 * 3],
+                outputRange: [0, 0, -ScreenWidth / 5 * 2]
+              })
+            }]
+          }}
+          assets={this.state.diary.photos}
+          addPress={this._onAddPress}
+          removePress={this._onRemovePress}
+        />
+      )
+    } else {
+      return (
+        <View/>
+      )
+    }
   }
   content() {
     let date = DateManager.getDateStr(this.state.diary.year,this.state.diary.month,this.state.diary.day);
@@ -202,7 +213,9 @@ class Diary extends PureComponent {
           )
         }
       >
-        <View style={styles.subcontent}>
+        <View style={[styles.subcontent, {
+          marginTop: this.state.diary.photos.length != 0 ? ScreenWidth / 5 * 3 : NAVIGATION_HEIGHT,
+        }]}>
           <Text style={styles.date}>{date}</Text>
           <Text style={styles.name}>{this.state.diary.name}</Text>
           <Image style={styles.weather} source={this.state.icon[this.state.diary.weather]}/>
@@ -211,19 +224,12 @@ class Diary extends PureComponent {
       </ScrollView>
     )
   }
-  // 提示
-  toast=()=>{
-    return (
-      <Toast ref={"toast"} text={"正在删除, 请稍后"}/>
-    )
-  }
   render() {
     return (
       <View style={styles.container}>
         {this.content()}
         {this.swipe()}
         {this.nav()}
-        {this.toast()}
       </View>
     );
   }
@@ -254,7 +260,6 @@ const styles = StyleSheet.create({
   subcontent: {
     paddingLeft: 20,
     paddingRight: 20,
-    marginTop: ScreenWidth / 5 * 3,
     paddingTop: 20,
     paddingBottom: 20,
     flex: 1, 
@@ -264,7 +269,8 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 9,
     color: 'rgba(200,200,200,1)',
-    fontWeight: '400',
+    // fontWeight: '400',
+    fontFamily: 'Exo2-Regular',
   },
   name: {
     fontSize: 16,
@@ -273,7 +279,8 @@ const styles = StyleSheet.create({
     color: TitleColor,
     textAlign: 'center',
     marginTop: 5,
-    fontWeight: '500',
+    // fontWeight: '500',
+    fontFamily: 'Exo2-Bold',
     color: 'rgba(150,150,150,1)',
   },
   weather: {

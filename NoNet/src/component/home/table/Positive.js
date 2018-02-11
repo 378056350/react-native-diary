@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
     fontSize: 50,
     color: 'white',
     paddingLeft: 20,
-    fontWeight: '200',
+    fontFamily: 'Exo2-ExtraLight'
   },
   day: {
     fontSize: 25,
     color: 'white',
     paddingLeft: 20,
-    fontWeight: '300',
+    fontFamily: 'Exo2-Regular'
   },
   bottom: {
     position: 'absolute',
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
   },
   diarys: {
     color: 'white',
+    fontFamily: 'Exo2-Regular'
   },
   lines: {
     height: 3,

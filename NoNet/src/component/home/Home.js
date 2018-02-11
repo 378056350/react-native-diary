@@ -44,22 +44,32 @@ class Home extends PureComponent {
     //   weather: '3', 
     //   year: '2018',
     //   month: '2',
-    //   day: '11', 
+    //   day: '4', 
     //   photos: []
     // });
+
+    // RealmManager.saveDiary(
+    //   "123123123123123123",
+    //   "12312312321312321asdas",
+    //   "2018",
+    //   "2",
+    //   "1",
+    //   "0", 
+    //   [],
+    // );
     // 查
     DiaryAction.loadDiarySaga();
     // 改
-    RealmManager.replaceDiary(
-      1, 
-      '啊啊啊啊啊啊a', 
-      '奥术大师大奥所多',
-      '2018',
-      '2',
-      '10',
-      '1',
-      [],
-    )
+    // RealmManager.replaceDiary(
+    //   1, 
+    //   '啊啊啊啊啊啊a', 
+    //   '奥术大师大奥所多',
+    //   '2018',
+    //   '2',
+    //   '10',
+    //   '1',
+    //   [],
+    // )
     // 删
     // DiaryAction.removeDiarySaga('id == 1')
   }
@@ -122,18 +132,22 @@ class Home extends PureComponent {
   }
   // 编辑日记
   _onBottomEditClick=()=>{
-    InteractionManager.runAfterInteractions(() => {
-      let year = DateManager.getYear();
-      let month = DateManager.getMonth();
-      let day = DateManager.getDay();
-      const { navigate } = this.props.navigation;
-      navigate("Edit", {
-        year: year,
-        month: month,
-        day: day,
-        type: 0
-      });
-    })
+    let year = DateManager.getYear();
+    let month = DateManager.getMonth();
+    let day = DateManager.getDay();
+    this.pushEdit(year, month, day)
+    // InteractionManager.runAfterInteractions(() => {
+    //   let year = DateManager.getYear();
+    //   let month = DateManager.getMonth();
+    //   let day = DateManager.getDay();
+    //   const { navigate } = this.props.navigation;
+    //   navigate("Edit", {
+    //     year: year,
+    //     month: month,
+    //     day: day,
+    //     type: 0,
+    //   });
+    // })
   }
   // 切换卡片正反
   _onBottomChangClick=(isDetail)=>{
@@ -166,7 +180,6 @@ class Home extends PureComponent {
         day: day,
         type: 0,
         callback: ()=>{
-          console.log("回调了")
           setTimeout(() => {
             that.pushDiary(year, month, day);
           }, 1000);

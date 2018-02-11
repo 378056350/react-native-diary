@@ -11,7 +11,7 @@ class AutoExpandingTextInput extends Component {
       text: '',
       height: 0,
       editable: true,
-      default: ''
+      default: undefined
     };
   }
   onContentSizeChange(event) {
@@ -22,11 +22,17 @@ class AutoExpandingTextInput extends Component {
     this.props.onContentSizeChange();
   }
   getContent() {
-    return this.state.text
+    if (this.state.default != undefined && this.state.text == undefined) {
+      return this.state.default;
+    } else if (this.state.text == undefined) {
+      return ''
+    } else {
+      return this.state.text;
+    }
   }
   setText(text) {
     this.setState({
-      default: text
+      default: text,
     })
   }
 

@@ -3,6 +3,7 @@ import StorageManager from './StorageManager';
 var Realm = require('realm');
 var realm;
 var realmListener = null;
+var finishBlock = null;
 // 连接组件 
 export default class RealmManager {
 
@@ -29,22 +30,19 @@ export default class RealmManager {
       }
     });
     realm = new Realm({schema: schemas});
+    realm.addListener('change', () => {
+      if (finishBlock) {
+        finishBlock();
+      }
+    });
   }
 
 
   //==================== 日记 ====================//
   // 增日记
   static saveDiary(name, content, year, month, day, weather, photos, callback) {
-    // if (realmListener != null) {
-    //   realmListener.remove();
-    // }
-    // realmListener = realm.addListener('change', () => {
-    //   if (callback) {
-    //     callback();
-    //   }
-    // });
+    finishBlock = callback;
     RealmManager.loadMaxId((maxid)=>{
-      console.log("开始存储")
       realm.write(() => {
         realm.create('Diary', {
           id: maxid, 
@@ -74,9 +72,8 @@ export default class RealmManager {
     }
   }
   // 改日记
-  static replaceDiary(id, name, content, year, month, day, weather, photos) {
-    console.log("正在更改")
-    console.log(id);
+  static replaceDiary(id, name, content, year, month, day, weather, photos, callback) {
+    finishBlock = callback;
     realm.write(() => {
       realm.create('Diary', {
         id: id, 
@@ -92,14 +89,7 @@ export default class RealmManager {
   }
   // 删日记
   static removeDiary(filtered, callback) {
-    // if (realmListener != null) {
-    //   realmListener.remove();
-    // }
-    // realmListener = realm.addListener('change', () => {
-    //   if (callback) {
-    //     callback();
-    //   }
-    // });
+    finishBlock = callback;
     realm.write(() => {
       // 获取Person对象
       let persons = realm.objects('Diary');
@@ -112,42 +102,26 @@ export default class RealmManager {
   }
 
 
-  // 监听事件
-  static becomeListener(callback) {
-    if (realmListener != null) {
-      realmListener.remove();
-    }
-    realmListener = realm.addListener('change', () => {
-      console.log("回调")
-      if (callback) {
-        callback();
-      }
-    });
-  }
-
-
   //==================== ID设置 ====================//
   // 获取最大ID
   static loadMaxId(block) {
     StorageManager.loadWithKey('MAXID', (data)=>{
-      console.log("进来了1")
       if (block) {
-        block(data);
+        block(parseInt(data));
       }
     },(err)=>{
-      console.log("进来了2")
       if (block) {
-          block(1);
+        block(1);
       }
     });
   }
   // 获取最大ID
   static saveMaxId(id) {
     if (id != null) {
-      StorageManager.saveWithKey('MAXID', id, null); 
+      StorageManager.saveWithKey('MAXID', parseInt(id), null); 
     } else {
       RealmManager.loadMaxId((maxid)=>{
-        StorageManager.saveWithKey('MAXID', maxid+1, null); 
+        StorageManager.saveWithKey('MAXID', parseInt(maxid) + 1, null); 
       });
     }
   }

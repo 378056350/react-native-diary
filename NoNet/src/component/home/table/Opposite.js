@@ -88,13 +88,16 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: 40,
-    fontWeight: '300',
+    // fontWeight: '300',
+    color: 'rgba(100,100,100,1)',
+    fontFamily: 'Exo2-Regular'
   },
   month: {
     fontSize: 15,
     fontWeight: '100',
     color: 'rgba(100,100,100,1)',
     marginTop: 5,
+    fontFamily: 'Exo2-ExtraLight'
   },
   calender: {
     flex: 1,

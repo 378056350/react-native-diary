@@ -22,9 +22,12 @@ class Cell extends Component {
   }  
 
   content() {
-    if (false) {
+    if (this.props.item.photos.length != 0) {
       return (
-        <Image style={styles.pic}/>
+        <Image 
+          style={styles.pic} 
+          source={{'uri': this.props.item.photos[0], scale: 1}}
+        />
       )
     } else {
       return (

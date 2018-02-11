@@ -42,12 +42,14 @@ const styles = StyleSheet.create({
   },
   top: {
     fontSize: 9,
-    color: 'rgba(170,170,170,1)'
+    color: 'rgba(170,170,170,1)',
+    fontFamily: 'Exo2-ExtraLight'
   },
   bottom: {
     fontSize: 10,
     fontWeight: '500',
-    color: 'rgba(50,50,50,1)'
+    color: 'rgba(50,50,50,1)',
+    fontFamily: 'Exo2-ExtraLight'
   }
 });
 

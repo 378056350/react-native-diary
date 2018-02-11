@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   topLeft: {
     fontSize: 11,
     fontWeight: '300',
-    color: 'gray'
+    color: 'gray',
   },
   topRight: {
     height: ScreenHeight / 5 * 2 / 5,
@@ -265,9 +265,10 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   topRightText: {
-    fontSize: 13,
-    fontWeight: '400',
-    color: 'rgba(50,50,50,1)',
+    fontSize: 15,
+    // fontWeight: '400',
+    color: 'rgba(100,100,100,1)',
+    fontFamily: 'Exo2-Bold',
   },
 });
 

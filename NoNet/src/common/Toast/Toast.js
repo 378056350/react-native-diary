@@ -36,9 +36,11 @@ class Toast extends Component {
     this.setState({
       modalVisible: true
     })
-    this.timer = setTimeout(() => {
-      this.hide()
-    }, time);
+    if (time) {
+      this.timer = setTimeout(() => {
+        this.hide()
+      }, time);
+    }
   }
   hide(callBack) {
     this.setState({

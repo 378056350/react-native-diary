@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: '600',
+    // fontWeight: '600',
+    fontFamily: 'Exo2-Bold'
   },
   line: {
     position: 'absolute',

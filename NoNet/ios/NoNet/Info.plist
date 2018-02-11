@@ -37,8 +37,14 @@
 	<string>App需要访问相册</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App需要访问相册</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>fonts/weathericons-regular-webfont.ttf</string>
+		<string>fonts/LeagueGothic-Regular.otf</string>
+		<string>fonts/Exo2-Regular.otf</string>
+		<string>fonts/Exo2-ExtraLight.otf</string>
+		<string>fonts/Exo2-Bold.otf</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -46,8 +52,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
