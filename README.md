@@ -33,8 +33,6 @@
 ##### 示例图片
 
 ![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/1.gif)<br/>
-![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/2.gif)<br/>
-![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/3.gif)
 
 
 
