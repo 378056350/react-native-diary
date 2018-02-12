@@ -32,7 +32,12 @@
 
 ##### 示例图片
 
-![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/1.gif)<br/>
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/screenshot1.gif)>
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/screenshot2.png)<br/>
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/screenshot3.png)
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/screenshot4.png)<br/>
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/screenshot5.png)
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/screenshot6.png)<br/>
 
 
 
