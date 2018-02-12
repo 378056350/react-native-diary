@@ -1,10 +1,10 @@
 
 
-#### react-native-diary
+##### react-native-diary
 
 ------
 
-#####一款基于react-native仿照的卡片日记App，提供丰富的功能，更好体验，旨在更好的日记管理。
+##### 一款基于react-native仿照的卡片日记App，提供丰富的功能，更好体验，旨在更好的日记管理。
 
 ```
 基于React Native开发，适配iOS。
@@ -24,7 +24,7 @@
 
 2、clone代码，根目录下执行`npm install`安装node_modules(太慢建议科学上网或使用淘宝镜像)
 
-3、打开xcode运行或执行`react-native run-android`
+3、打开xcode运行或执行`react-native run-ios`
 
 4、如提示账号错误，更改`General->Bundle Identifier`为其他id(随便写一个即可)
 
@@ -32,7 +32,9 @@
 
 ##### 示例图片
 
-![image](NoNet/src/screenshot/screenshot1.gif)
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/1.gif)<br/>
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/2.gif)<br/>
+![](https://github.com/378056350/react-native-diary/blob/master/NoNet/src/screenshot/3.gif)
 
 
 
