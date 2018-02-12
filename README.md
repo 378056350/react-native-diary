@@ -43,9 +43,8 @@
 
 ##### 第三方框架
 
-- [react-native@0.51.0](https://reactnative.cn/docs/0.51/getting-started.html)
-- [immutability@1.0.2](https://github.com/facebook/immutable-js)
-
+* [react-native@0.51.0](https://reactnative.cn/docs/0.51/getting-started.html)
+* [immutability@1.0.2](https://github.com/facebook/immutable-js)
 * [redux-immutable@4.0.0](https://github.com/gajus/redux-immutable)
 * [prop-types@15.6.0](https://github.com/facebook/prop-types)
 * [react-native-swiper@1.5.13](https://github.com/leecade/react-native-swiper)
